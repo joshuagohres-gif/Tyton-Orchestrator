@@ -200,9 +200,14 @@ curl -X POST http://localhost:3000/api/seed
 
 ## Recent Changes
 
-- **2025-08-18**: Major UI/UX improvements and alpha branding
+- **2025-08-18**: Major UI/UX improvements and alpha branding rebrand
+  - **Alpha Rebrand**: Changed all "Beta" references to "Alpha" across entire project
+  - Updated logo from "TYTON Beta" to "TYTON Alpha" with animated spectrum effect
+  - Changed CSS animations from `betaGlow` to `alphaGlow`
+  - Updated version from 0.2.0-beta to 0.2.0-alpha in package.json
+  - Rebranded documentation files (README, CLAUDE.md, DEVELOPMENT.md)
+  - **Masthead Page**: Added exclusive masthead page accessible only via logo click
   - Redesigned navigation icons for 5 key buttons (projects, marketplace, groups, news, profile)
-  - Updated logo to "TYTON Alpha" with dynamic animated spectrum effect
   - Fixed erroneous ">" character in navigation text
   - Standardized all navigation icons with consistent 40x40 viewBox design
   - Enhanced SVG fallback icons with #050814 background and #DAA520 gold content

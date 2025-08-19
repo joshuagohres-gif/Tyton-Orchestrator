@@ -20,5 +20,9 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
     "validator": "^13.15.15"
+  },
+  "devDependencies": {
+    "marked": "^16.2.0",
+    "puppeteer": "^24.16.2"
   }
 }

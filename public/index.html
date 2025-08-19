@@ -8,6 +8,20 @@
     @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap');
     
     :root{
+      /* Responsive Scaling Variables */
+      --scale: clamp(0.9, 0.6rem + 0.6vw, 1.15);
+      --sidebar-w: clamp(220px, 18vw, 320px);
+      --sidebar-rail: 72px;
+      --font-s: clamp(12px, 0.9rem + 0.2vw, 16px);
+      --font-xs: clamp(10px, 0.7rem + 0.15vw, 12px);
+      --icon: clamp(18px, 1rem + 0.4vw, 24px);
+      --icon-lg: clamp(24px, 1.4rem + 0.5vw, 32px);
+      --pad-y: clamp(8px, 0.4rem + 0.3vw, 14px);
+      --pad-x: clamp(10px, 0.6rem + 0.4vw, 18px);
+      --gap: clamp(4px, 0.25rem + 0.2vw, 8px);
+      --nav-item-height: clamp(44px, 2.5rem + 0.5vw, 52px);
+      
+      /* Theme Colors */
       --navy:#0a0d1a; --gold:#daa520; --maroon:#7a263a; --ink:#050814; --muted:#a8c8ec; --bg:#060b16;
       --card:#0e1425; --ring:#1a2847; --ring-focus:#daa520; --white:#f0f9ff; --shadow:rgba(0,0,0,.6);
       --gradient-primary: linear-gradient(135deg, #b8860b 0%, #daa520 30%, #ffb627 70%, #ffd700 100%);
@@ -784,6 +798,280 @@
       color: #f3bd4b;
     }
 
+    /* Creation Engine Styles */
+    .template-btn {
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--ring);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: var(--white);
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 14px;
+      font-weight: 500;
+      width: 100%;
+      margin-bottom: 8px;
+    }
+
+    .template-btn:hover {
+      background: rgba(218,165,32,.15);
+      border-color: var(--border-accent);
+      color: var(--white);
+    }
+
+    .progress-stepper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 20px;
+      overflow-x: auto;
+      gap: 12px;
+      background: rgba(255,255,255,.02);
+      border-radius: 12px;
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      min-width: 90px;
+      opacity: 0.4;
+      transition: all 0.3s ease;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .step.active {
+      opacity: 1;
+      color: var(--white);
+    }
+
+    .step.completed {
+      opacity: 1;
+      color: var(--gold);
+    }
+
+    .step span {
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .step-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.1);
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 14px;
+      border: 2px solid transparent;
+    }
+
+    .step.active .step-icon {
+      background: var(--gold);
+      color: var(--ink);
+      border-color: var(--gold);
+    }
+
+    .step.completed .step-icon {
+      background: var(--gold);
+      color: var(--ink);
+      border-color: var(--gold);
+    }
+
+    .tab-nav {
+      display: flex;
+      gap: 4px;
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--ring);
+      border-radius: 12px;
+      padding: 6px;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      padding: 12px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      color: var(--white);
+      background: rgba(255,255,255,.08);
+    }
+
+    .tab-btn.active {
+      color: var(--ink);
+      background: var(--gold);
+      font-weight: 600;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px;
+      background: rgba(255,255,255,.02);
+      border: 1px solid var(--ring);
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+
+    .task-item.completed {
+      border-color: rgba(34,197,94,.3);
+      background: rgba(34,197,94,.05);
+    }
+
+    .task-item.running {
+      border-color: var(--gold);
+      background: rgba(218,165,32,.05);
+    }
+
+    .task-status {
+      font-size: 20px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .task-content {
+      flex: 1;
+    }
+
+    .task-content h4 {
+      margin: 0 0 6px 0;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .task-content p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .export-actions {
+      margin-top: 20px;
+    }
+
+    .export-actions button {
+      text-align: left;
+      justify-content: flex-start;
+      gap: 12px;
+      padding: 14px 18px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* Responsive Creation Engine Styles */
+    @media (max-width: 768px) {
+      #creation-intake {
+        grid-template-columns: 1fr !important;
+        gap: 16px;
+      }
+      
+      .progress-stepper {
+        padding: 16px 12px;
+        gap: 8px;
+        overflow-x: scroll;
+      }
+      
+      .step {
+        min-width: 70px;
+        flex-shrink: 0;
+      }
+      
+      .step span {
+        font-size: 11px;
+      }
+      
+      .step-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+      }
+      
+      .tab-nav {
+        flex-wrap: wrap;
+        gap: 4px;
+        padding: 4px;
+      }
+      
+      .tab-btn {
+        padding: 10px 14px;
+        font-size: 13px;
+        flex: 1;
+        min-width: 0;
+        text-align: center;
+      }
+      
+      .export-actions {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+      }
+      
+      .task-item {
+        padding: 14px;
+        gap: 12px;
+      }
+      
+      .task-content h4 {
+        font-size: 14px;
+      }
+      
+      .task-content p {
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .progress-stepper {
+        padding: 12px 8px;
+        gap: 6px;
+      }
+      
+      .step {
+        min-width: 60px;
+      }
+      
+      .step span {
+        font-size: 10px;
+      }
+      
+      .step-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 11px;
+      }
+      
+      .tab-btn {
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+    }
+
     .btn-full {
       width: 100%;
       margin-bottom: 16px;
@@ -804,18 +1092,19 @@
     /* Fixed Left Navigation Sidebar */
     .nav-sidebar {
       position: fixed;
-      top: 0; /* Start at top to pass under header */
+      top: 0;
       left: 0;
-      width: 220px;
+      width: var(--sidebar-w);
       height: 100vh;
       background: linear-gradient(180deg, var(--surface-elevated) 0%, rgba(15,22,41,.95) 100%);
       border-right: 1px solid var(--border-accent);
       box-shadow: 4px 0 20px rgba(0,0,0,.3);
       backdrop-filter: blur(16px);
-      z-index: 900; /* Lower than header */
+      z-index: 900;
       display: flex;
       flex-direction: column;
-      padding: 76px 0 20px 0; /* Top padding to align with header height */
+      padding: 76px 0 20px 0;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .nav-sidebar::before {
@@ -832,26 +1121,55 @@
     
     .nav-menu {
       flex: 1;
-      padding: 0 16px;
+      padding: 0 var(--pad-x);
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-subtle) transparent;
+    }
+    
+    .nav-menu::-webkit-scrollbar {
+      width: 4px;
+    }
+    
+    .nav-menu::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .nav-menu::-webkit-scrollbar-thumb {
+      background: var(--border-subtle);
+      border-radius: 2px;
     }
     
     .nav-item {
       display: flex;
       align-items: center;
       width: 100%;
-      padding: 14px 20px;
-      margin-bottom: 4px;
+      min-height: var(--nav-item-height);
+      padding: var(--pad-y) var(--pad-x);
+      margin-bottom: var(--gap);
       background: none;
       border: none;
       color: var(--white);
       text-align: left;
       cursor: pointer;
       font-family: inherit;
-      font-size: 14px;
+      font-size: var(--font-s);
       font-weight: 500;
-      transition: all 0.3s ease;
-      border-radius: 10px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: clamp(8px, 0.5rem + 0.2vw, 12px);
       position: relative;
+      gap: clamp(8px, 0.5rem + 0.3vw, 12px);
+      white-space: nowrap;
+    }
+    
+    .nav-item .label {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: opacity 0.3s ease;
     }
 
     
@@ -862,11 +1180,12 @@
     }
 
     .nav-item img {
-      width: 20px;
-      height: 20px;
-      margin-right: 12px;
+      width: var(--icon);
+      height: var(--icon);
+      min-width: var(--icon);
       opacity: 0.8;
-      transition: opacity 0.2s ease;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
     }
 
     .nav-item:hover img {
@@ -883,6 +1202,203 @@
 
     .nav-item[aria-current="page"] img {
       opacity: 1;
+    }
+    
+    /* Responsive Sidebar Scaling */
+    /* Rail mode for medium screens */
+    @media (max-width: 768px) and (min-width: 481px) {
+      .nav-sidebar {
+        width: var(--sidebar-rail);
+      }
+      
+      .nav-sidebar .nav-item .label {
+        opacity: 0;
+        width: 0;
+        overflow: hidden;
+        position: absolute;
+      }
+      
+      .nav-sidebar .nav-item {
+        justify-content: center;
+        padding: var(--pad-y) calc(var(--pad-x) / 2);
+        position: relative;
+      }
+      
+      /* Tooltip on hover for rail mode */
+      .nav-sidebar .nav-item::after {
+        content: attr(data-label);
+        position: absolute;
+        left: calc(100% + 8px);
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--card);
+        color: var(--white);
+        padding: 8px 12px;
+        border-radius: 8px;
+        white-space: nowrap;
+        font-size: var(--font-s);
+        box-shadow: 0 4px 12px rgba(0,0,0,.3);
+        z-index: 1000;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        border: 1px solid var(--border-accent);
+      }
+      
+      .nav-sidebar .nav-item:hover::after {
+        opacity: 1;
+      }
+      
+      .sidebar-weather-widget {
+        padding: 8px;
+      }
+      
+      .sidebar-weather-widget .weather-location,
+      .sidebar-weather-widget .weather-status,
+      .sidebar-weather-widget .weather-details-sidebar {
+        display: none;
+      }
+      
+      .sidebar-copyright {
+        display: none;
+      }
+      
+      body {
+        padding-left: var(--sidebar-rail);
+      }
+      
+      header {
+        margin-left: calc(-1 * var(--sidebar-rail));
+        padding-left: var(--sidebar-rail);
+      }
+    }
+    
+    /* Off-canvas mode for small screens */
+    @media (max-width: 480px) {
+      .nav-sidebar {
+        width: min(85vw, 300px);
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1001;
+      }
+      
+      .nav-sidebar.mobile-open {
+        transform: translateX(0);
+        box-shadow: 0 0 50px rgba(0,0,0,.5);
+      }
+      
+      /* Overlay for off-canvas */
+      .nav-sidebar::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 100%;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0,0,0,0.5);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      
+      .nav-sidebar.mobile-open::after {
+        pointer-events: all;
+        opacity: 1;
+      }
+      
+      .nav-sidebar .nav-item .label {
+        opacity: 1;
+        width: auto;
+        position: static;
+      }
+      
+      .nav-sidebar .nav-item {
+        justify-content: flex-start;
+        padding: var(--pad-y) var(--pad-x);
+      }
+      
+      body {
+        padding-left: 0;
+      }
+      
+      header {
+        margin-left: 0;
+        padding-left: 60px;
+      }
+      
+      .mobile-nav-toggle {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        background: rgba(14,20,37,.8);
+        border: 1px solid var(--border-accent);
+        border-radius: 8px;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.3s ease;
+      }
+      
+      .mobile-nav-toggle span,
+      .mobile-nav-toggle span::before,
+      .mobile-nav-toggle span::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 2px;
+        background: var(--white);
+        transition: all 0.3s ease;
+      }
+      
+      .mobile-nav-toggle span::before {
+        top: -6px;
+      }
+      
+      .mobile-nav-toggle span::after {
+        top: 6px;
+      }
+      
+      .mobile-nav-toggle.active span {
+        background: transparent;
+      }
+      
+      .mobile-nav-toggle.active span::before {
+        top: 0;
+        transform: rotate(45deg);
+      }
+      
+      .mobile-nav-toggle.active span::after {
+        top: 0;
+        transform: rotate(-45deg);
+      }
+    }
+    
+    /* Accessibility - Focus states */
+    .nav-item:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--ring-focus);
+    }
+    
+    .nav-item:focus-visible {
+      outline: 2px solid var(--ring-focus);
+      outline-offset: 2px;
+    }
+    
+    /* Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+      .nav-sidebar,
+      .nav-item,
+      .nav-item img,
+      .nav-item .label,
+      body,
+      header {
+        transition-duration: 0.01ms !important;
+      }
+      
+      @keyframes fadeIn {
+        to { opacity: 1; }
+      }
     }
     
     /* Sidebar Weather Widget */
@@ -981,14 +1497,16 @@
 
     /* Adjust main layout for sidebar and fixed header */
     body {
-      padding-left: 220px;
-      padding-top: 76px; /* Account for fixed header height */
+      padding-left: var(--sidebar-w);
+      padding-top: 76px;
+      transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     header {
-      margin-left: -220px;
-      padding-left: 220px;
-      overflow: hidden; /* Prevent content from extending beyond boundaries */
+      margin-left: calc(-1 * var(--sidebar-w));
+      padding-left: var(--sidebar-w);
+      overflow: hidden;
+      transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     /* Search Bar */
@@ -1811,50 +2329,65 @@
     <!-- Fixed Left Navigation Sidebar -->
     <nav class="nav-sidebar" aria-label="Main navigation" role="navigation">
       <div class="nav-menu">
-        <button id="nav-home" class="nav-item" onclick="setRoute('home')">
-          <img src="/assets/tyton_home.png" alt="Home" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeD0iOCIgeT0iOCI+CjxwYXRoIGQ9Ik0zIDEyTDEyIDNMMjEgMTIiIHN0cm9rZT0iI0RBQTUyMCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPHBhdGggZD0iTTUgMTJWMTlBMSAxIDAgMCAwIDYgMjBIMTBWMTZBMSAxIDAgMCAxIDExIDE1SDEzQTEgMSAwIDAgMSAxNCAxNlYyMEgxOEExIDEgMCAwIDAgMTkgMTlWMTIiIHN0cm9rZT0iI0RBQTUyMCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cjwvc3ZnPg=='"> Home
+        <button id="nav-home" class="nav-item" onclick="setRoute('home')" data-label="Home">
+          <img src="/assets/tyton_home.png" alt="Home" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHBhdGggZD0iTTExIDIwTDIwIDExTDI5IDIwIiBzdHJva2U9IiNEQUE1MjAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CjxwYXRoIGQ9Ik0xMyAyMFYyN0ExIDEgMCAwIDAgMTQgMjhIMThWMjRBMSAxIDAgMCAxIDE5IDIzSDIxQTEgMSAwIDAgMSAyMiAyNFYyOEgyNkExIDEgMCAwIDAgMjcgMjdWMjAiIHN0cm9rZT0iI0RBQTUyMCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg=='>
+          <span class="label">Home</span>
         </button>
-        <button id="nav-search" class="nav-item" onclick="setRoute('search')">
-          <img src="/assets/tyton_search.png" alt="Search" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeD0iOCIgeT0iOCI+CjxjaXJjbGUgY3g9IjExIiBjeT0iMTEiIHI9IjYiIHN0cm9rZT0iI0RBQTUyMCIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIi8+CjxwYXRoIGQ9Ik0xNiAxNkwyMCAyMCIgc3Ryb2tlPSIjREFBNTIwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4KPC9zdmc+'"> Search
+        <button id="nav-search" class="nav-item" onclick="setRoute('search')" data-label="Search">
+          <img src="/assets/tyton_search.png" alt="Search" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iNiIgc3Ryb2tlPSIjREFBNTIwIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiLz4KPHBhdGggZD0iTTI1IDI1TDI5IDI5IiBzdHJva2U9IiNEQUE1MjAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPg=='>
+          <span class="label">Search</span>
         </button>
-        <button id="nav-projects" class="nav-item" onclick="setRoute('projects')">
-          <img src="/assets/tyton_projects.png" alt="Projects" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeD0iOCIgeT0iOCI+CjxwYXRoIGQ9Ik04IDNINkM1IDMgNCA0IDQgNVYxOUM0IDIwIDUgMjEgNiAyMUgxOEMxOSAyMSAyMCAyMCAyMCAxOVY5SDE4VjE4SDZWNUg4VjNaIiBmaWxsPSIjREFBNTIwIi8+CjxjaXJjbGUgY3g9IjEyIiBjeT0iNiIgcj0iMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjREFBNTIwIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8cGF0aCBkPSJNMTIgOUwxNSAxMkwxMiAxNUw5IDEyWiIgZmlsbD0iI0RBQTUyMCIvPgo8cGF0aCBkPSJNOCAxMEgxNk04IDEzSDE2TTggMTZIMTYiIHN0cm9rZT0iIzA1MDgxNCIgc3Ryb2tlLXdpZHRoPSIxIi8+Cjwvc3ZnPgo8L3N2Zz4='"> Projects
+        <button id="nav-projects" class="nav-item" onclick="setRoute('projects')" data-label="Projects">
+          <img src="/assets/tyton_projects.png" alt="Projects" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHBhdGggZD0iTTE2IDExSDE0QzEzIDExIDEyIDEyIDEyIDEzVjI3QzEyIDI4IDEzIDI5IDE0IDI5SDI2QzI3IDI5IDI4IDI4IDI4IDI3VjE3SDI2VjI2SDE0VjEzSDE2VjExWiIgZmlsbD0iI0RBQTUyMCIvPgo8Y2lyY2xlIGN4PSIyMCIgY3k9IjE0IiByPSIzIiBmaWxsPSJub25lIiBzdHJva2U9IiNEQUE1MjAiIHN0cm9rZS13aWR0aD0iMS41Ii8+CjxwYXRoIGQ9Ik0yMCAxN0wyMyAyMEwyMCAyM0wxNyAyMFoiIGZpbGw9IiNEQUE1MjAiLz4KPHBhdGggZD0iTTE2IDE4SDI0TTE2IDIxSDI0TTE2IDI0SDI0IiBzdHJva2U9IiMwNTA4MTQiIHN0cm9rZS13aWR0aD0iMSIvPgo8L3N2Zz4K'>
+          <span class="label">Projects</span>
         </button>
-        <button id="nav-project-manager" class="nav-item" onclick="setRoute('project-manager')">
-          <img src="/assets/tyton_project_manager.png" alt="Project Manager" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeD0iOCIgeT0iOCI+CjxwYXRoIGQ9Ik04IDRINkM1LjQ0NzcyIDQgNSA0LjQ0NzcyIDUgNVYxOUM1IDE5LjU1MjMgNS40NDc3MiAyMCA2IDIwSDhWNFoiIGZpbGw9IiNEQUE1MjAiLz4KPHBhdGggZD0iTTE4IDRIOFYyMEgxOEMxOC41NTIzIDIwIDE5IDE5LjU1MjMgMTkgMTlWNUMxOSA0LjQ0NzcyIDE4LjU1MjMgNCAxOCA0WiIgZmlsbD0iI0RBQTUyMCIvPgo8cGF0aCBkPSJNMTAgN0gxNiIgc3Ryb2tlPSIjMDUwODE0IiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8cGF0aCBkPSJNMTAgMTBIMTYiIHN0cm9rZT0iIzA1MDgxNCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPHBhdGggZD0iTTEwIDEzSDE0IiBzdHJva2U9IiMwNTA4MTQiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIHI9IjIiIGZpbGw9IiNEQUE1MjAiIHN0cm9rZT0iIzA1MDgxNCIgc3Ryb2tlLXdpZHRoPSIwLjUiLz4KPC9zdmc+Cjwvc3ZnPg=='"> Project Manager
+        <button id="nav-creation-engine" class="nav-item" onclick="setRoute('creation-engine')" data-label="Creation Engine">
+          <img src="/assets/tyton_creation_engine.png" alt="Creation Engine" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjREFBNTIwIiBzdHJva2Utd2lkdGg9IjIiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iNCIgZmlsbD0iI0RBQTUyMCIvPgo8cGF0aCBkPSJNMjAgMTJWMjhNMTIgMjBIMjhNMTUuNTcgMTUuNTdMMjQuNDMgMjQuNDNNMjQuNDMgMTUuNTdMMTUuNTcgMjQuNDMiIHN0cm9rZT0iI0RBQTUyMCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9zdmc+'>
+          <span class="label">Creation Engine</span>
         </button>
-        <button id="nav-equipment" class="nav-item" onclick="setRoute('equipment')">
-          <img src="/assets/tyton_equipment.png" alt="Marketplace" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeD0iOCIgeT0iOCI+CjxwYXRoIGQ9Ik01IDhMMy41IDEwVjIwSDIwLjVWMTBMMTkgOEg1WiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjREFBNTIwIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8Y2lyY2xlIGN4PSIxMCIgY3k9IjEzIiByPSIyIiBmaWxsPSIjREFBNTIwIi8+CjxjaXJjbGUgY3g9IjE0IiBjeT0iMTMiIHI9IjIiIGZpbGw9IiNEQUE1MjAiLz4KPHBhdGggZD0iTTggOFY1QzggNCA5IDMgMTAgM0gxNEMxNSAzIDE2IDQgMTYgNVY4IiBzdHJva2U9IiNEQUE1MjAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPHBhdGggZD0iTTYgMTdIMTgiIHN0cm9rZT0iI0RBQTUyMCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4KPC9zdmc+'"> Tyton Marketplace
+        <button id="nav-equipment" class="nav-item" onclick="setRoute('equipment')" data-label="Tyton Marketplace">
+          <img src="/assets/tyton_equipment.png" alt="Marketplace" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHBhdGggZD0iTTEzIDE2TDExLjUgMThWMjhIMjguNVYxOEwyNyAxNkgxM1oiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0RBQTUyMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPGNpcmNsZSBjeD0iMTgiIGN5PSIyMSIgcj0iMiIgZmlsbD0iI0RBQTUyMCIvPgo8Y2lyY2xlIGN4PSIyMiIgY3k9IjIxIiByPSIyIiBmaWxsPSIjREFBNTIwIi8+CjxwYXRoIGQ9Ik0xNiAxNlYxM0MxNiAxMiAxNyAxMSAxOCAxMUgyMkMyMyAxMSAyNCAxMiAyNCAxM1YxNiIgc3Ryb2tlPSIjREFBNTIwIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxwYXRoIGQ9Ik0xNCAyNUgyNiIgc3Ryb2tlPSIjREFBNTIwIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPgo='">
+          <span class="label">Tyton Marketplace</span>
         </button>
-        <button id="nav-groups" class="nav-item" onclick="setRoute('groups')">
-          <img src="/assets/tyton_groups.png" alt="Groups" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeD0iOCIgeT0iOCI+CjxyZWN0IHg9IjQiIHk9IjQiIHdpZHRoPSIxNiIgaGVpZ2h0PSIxMiIgcng9IjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0RBQTUyMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPGNpcmNsZSBjeD0iOSIgY3k9IjgiIHI9IjEuNSIgZmlsbD0iI0RBQTUyMCIvPgo8Y2lyY2xlIGN4PSIxNSIgY3k9IjgiIHI9IjEuNSIgZmlsbD0iI0RBQTUyMCIvPgo8Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxLjUiIGZpbGw9IiNEQUE1MjAiLz4KPHBhdGggZD0iTTEyIDEwVjE0TTEwIDEySDlNMTAgMTJWMTBNMTAgMTJIMTJNMTQgMTJIMTVNMTQgMTJWMTBNMTQgMTJIMTIiIHN0cm9rZT0iI0RBQTUyMCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPHJlY3QgeD0iNCIgeT0iMTgiIHdpZHRoPSIxNiIgaGVpZ2h0PSIyIiBmaWxsPSIjREFBNTIwIi8+Cjwvc3ZnPgo8L3N2Zz4='"> Groups
+        <button id="nav-groups" class="nav-item" onclick="setRoute('groups')" data-label="Groups">
+          <img src="/assets/tyton_groups.png" alt="Groups" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHJlY3QgeD0iMTIiIHk9IjEyIiB3aWR0aD0iMTYiIGhlaWdodD0iMTIiIHJ4PSIzIiBmaWxsPSJub25lIiBzdHJva2U9IiNEQUE1MjAiIHN0cm9rZS13aWR0aD0iMS41Ii8+CjxjaXJjbGUgY3g9IjE3IiBjeT0iMTYiIHI9IjEuNSIgZmlsbD0iI0RBQTUyMCIvPgo8Y2lyY2xlIGN4PSIyMyIgY3k9IjE2IiByPSIxLjUiIGZpbGw9IiNEQUE1MjAiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMS41IiBmaWxsPSIjREFBNTIwIi8+CjxwYXRoIGQ9Ik0yMCAxOFYyMk0xOCAyMEgxN00xOCAyMFYxOE0xOCAyMEgyME0yMiAyMEgyM00yMiAyMFYxOE0yMiAyMEgyMCIgc3Ryb2tlPSIjREFBNTIwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8cmVjdCB4PSIxMiIgeT0iMjYiIHdpZHRoPSIxNiIgaGVpZ2h0PSIyIiBmaWxsPSIjREFBNTIwIi8+Cjwvc3ZnPgo='>
+          <span class="label">Groups</span>
         </button>
-        <button id="nav-discussions" class="nav-item" onclick="setRoute('discussions')">
-          <img src="/assets/tyton_discussions.png" alt="Discussions" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeD0iOCIgeT0iOCI+CjxwYXRoIGQ9Ik04IDZDOCA1LjQ0NzcyIDguNDQ3NzIgNSA5IDVIMTdDMTcuNTUyMyA1IDE4IDUuNDQ3NzIgMTggNlYxNEMxOCAxNC41NTIzIDE3LjU1MjMgMTUgMTcgMTVIMTNMMTAgMThWMTVIOUM4LjQ0NzcyIDE1IDggMTQuNTUyMyA4IDE0VjZaIiBmaWxsPSIjREFBNTIwIi8+CjxwYXRoIGQ9Ik0xMSA5SDE1IiBzdHJva2U9IiMwNTA4MTQiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxwYXRoIGQ9Ik0xMSAxMkgxNSIgc3Ryb2tlPSIjMDUwODE0IiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4KPC9zdmc+'"> Discussions
+        <button id="nav-discussions" class="nav-item" onclick="setRoute('discussions')" data-label="Discussions">
+          <img src="/assets/tyton_discussions.png" alt="Discussions" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHBhdGggZD0iTTE2IDE0QzE2IDEzLjQ0NzcgMTYuNDQ3NyAxMyAxNyAxM0gyNUMyNS41NTIzIDEzIDI2IDEzLjQ0NzcgMjYgMTRWMjJDMjYgMjIuNTUyMyAyNS41NTIzIDIzIDI1IDIzSDIxTDE4IDI2VjIzSDE3QzE2LjQ0NzcgMjMgMTYgMjIuNTUyMyAxNiAyMlYxNFoiIGZpbGw9IiNEQUE1MjAiLz4KPHBhdGggZD0iTTE5IDE3SDIzIiBzdHJva2U9IiMwNTA4MTQiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxwYXRoIGQ9Ik0xOSAyMEgyMyIgc3Ryb2tlPSIjMDUwODE0IiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K'">
+          <span class="label">Discussions</span>
         </button>
-        <button id="nav-journal" class="nav-item" onclick="setRoute('journal')">
-          <img src="/assets/tyton_journal.png" alt="Journal" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeD0iOCIgeT0iOCI+CjxwYXRoIGQ9Ik02IDJINEMyLjg5IDIgMiAyLjg5IDIgNFYyMEMyIDIxLjExIDIuODkgMjIgNCAyMkg2VjJaIiBmaWxsPSIjREFBNTIwIi8+CjxwYXRoIGQ9Ik0yMCAySDZWMjJIMjBDMjEuMTEgMjIgMjIgMjEuMTEgMjIgMjBWNEMyMiAyLjg5IDIxLjExIDIgMjAgMloiIGZpbGw9IiNEQUE1MjAiLz4KPHBhdGggZD0iTTkgN0gxOSIgc3Ryb2tlPSIjMDUwODE0IiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxwYXRoIGQ9Ik05IDEwSDE5IiBzdHJva2U9IiMwNTA4MTQiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPHBhdGggZD0iTTkgMTNIMTYiIHN0cm9rZT0iIzA1MDgxNCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4KPC9zdmc+'"> Tyton Journal
+        <button id="nav-journal" class="nav-item" onclick="setRoute('journal')" data-label="Journal">
+          <img src="/assets/tyton_journal.png" alt="Journal" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHBhdGggZD0iTTE0IDEwSDEyQzEwLjg5IDEwIDEwIDEwLjg5IDEwIDEyVjI4QzEwIDI5LjExIDEwLjg5IDMwIDEyIDMwSDE0VjEwWiIgZmlsbD0iI0RBQTUyMCIvPgo8cGF0aCBkPSJNMjggMTBIMTRWMzBIMjhDMjkuMTEgMzAgMzAgMjkuMTEgMzAgMjhWMTJDMzAgMTAuODkgMjkuMTEgMTAgMjggMTBaIiBmaWxsPSIjREFBNTIwIi8+CjxwYXRoIGQ9Ik0xNyAxNUgyNyIgc3Ryb2tlPSIjMDUwODE0IiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxwYXRoIGQ9Ik0xNyAxOEgyNyIgc3Ryb2tlPSIjMDUwODE0IiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxwYXRoIGQ9Ik0xNyAyMUgyNCIgc3Ryb2tlPSIjMDUwODE0IiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPgo='">
+          <span class="label">Tyton Journal</span>
         </button>
-        <button id="nav-blog" class="nav-item" onclick="setRoute('blog')">
-          <img src="/assets/tyton_blog.png" alt="News" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeD0iOCIgeT0iOCI+CjxwYXRoIGQ9Ik02IDNINEMzLjQ0IDMgMyAzLjQ0IDMgNFYyMEMzIDIwLjU2IDMuNDQgMjEgNCAyMUg2VjNaIiBmaWxsPSIjREFBNTIwIi8+CjxwYXRoIGQ9Ik0yMCAzSDZWMjFIMjBDMjAuNTYgMjEgMjEgMjAuNTYgMjEgMjBWNEMyMSAzLjQ0IDIwLjU2IDMgMjAgM1oiIGZpbGw9IiNEQUE1MjAiLz4KPHBhdGggZD0iTTkgNkgxOSIgc3Ryb2tlPSIjMDUwODE0IiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8cGF0aCBkPSJNOSA5SDE3IiBzdHJva2U9IiMwNTA4MTQiIHN0cm9rZS13aWR0aD0iMS41Ii8+CjxwYXRoIGQ9Ik05IDEySDEzIiBzdHJva2U9IiMwNTA4MTQiIHN0cm9rZS13aWR0aD0iMS41Ii8+CjxjaXJjbGUgY3g9IjE3IiBjeT0iMTIiIHI9IjEuNSIgZmlsbD0iIzA1MDgxNCIvPgo8cGF0aCBkPSJNOSAxNUgxNiIgc3Ryb2tlPSIjMDUwODE0IiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8cGF0aCBkPSJNOSAxOEgxNCIgc3Ryb2tlPSIjMDUwODE0IiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8L3N2Zz4KPC9zdmc+'"> News
+        <button id="nav-blog" class="nav-item" onclick="setRoute('blog')" data-label="News">
+          <img src="/assets/tyton_blog.png" alt="News" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHBhdGggZD0iTTE0IDExSDEyQzExLjQ0IDExIDExIDExLjQ0IDExIDEyVjI4QzExIDI4LjU2IDExLjQ0IDI5IDEyIDI5SDE0VjExWiIgZmlsbD0iI0RBQTUyMCIvPgo8cGF0aCBkPSJNMjggMTFIMTRWMjlIMjhDMjguNTYgMjkgMjkgMjguNTYgMjkgMjhWMTJDMjkgMTEuNDQgMjguNTYgMTEgMjggMTFaIiBmaWxsPSIjREFBNTIwIi8+CjxwYXRoIGQ9Ik0xNyAxNEgyNyIgc3Ryb2tlPSIjMDUwODE0IiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8cGF0aCBkPSJNMTcgMTdIMjUiIHN0cm9rZT0iIzA1MDgxNCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPHBhdGggZD0iTTE3IDIwSDIxIiBzdHJva2U9IiMwNTA4MTQiIHN0cm9rZS13aWR0aD0iMS41Ii8+CjxjaXJjbGUgY3g9IjI1IiBjeT0iMjAiIHI9IjEuNSIgZmlsbD0iIzA1MDgxNCIvPgo8cGF0aCBkPSJNMTcgMjNIMjQiIHN0cm9rZT0iIzA1MDgxNCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPHBhdGggZD0iTTE3IDI2SDIyIiBzdHJva2U9IiMwNTA4MTQiIHN0cm9rZS13aWR0aD0iMS41Ii8+Cjwvc3ZnPgo='">
+          <span class="label">News</span>
         </button>
-        <button id="nav-profile" class="nav-item" onclick="setRoute('profile')">
-          <img src="/assets/tyton_profile.png" alt="Profile" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeD0iOCIgeT0iOCI+CjxjaXJjbGUgY3g9IjEyIiBjeT0iOCIgcj0iMy41IiBmaWxsPSJub25lIiBzdHJva2U9IiNEQUE1MjAiIHN0cm9rZS13aWR0aD0iMS41Ii8+CjxjaXJjbGUgY3g9IjEyIiBjeT0iOCIgcj0iMS41IiBmaWxsPSIjREFBNTIwIi8+CjxwYXRoIGQ9Ik01IDE4QzUgMTQuNjg2MyA4LjEzNDAxIDEyIDEyIDEyUzE5IDE0LjY4NjMgMTkgMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0RBQTUyMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPHBhdGggZD0iTTggMTdIMTZNNyAxOUgxNyIgc3Ryb2tlPSIjREFBNTIwIiBzdHJva2Utd2lkdGg9IjEiLz4KPC9zdmc+Cjwvc3ZnPg=='"> Profile
+        <button id="nav-profile" class="nav-item" onclick="setRoute('profile')" data-label="Profile">
+          <img src="/assets/tyton_profile.png" alt="Profile" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIxNiIgcj0iMy41IiBmaWxsPSJub25lIiBzdHJva2U9IiNEQUE1MjAiIHN0cm9rZS13aWR0aD0iMS41Ii8+CjxjaXJjbGUgY3g9IjIwIiBjeT0iMTYiIHI9IjEuNSIgZmlsbD0iI0RBQTUyMCIvPgo8cGF0aCBkPSJNMTMgMjZDMTMgMjIuNjg2MyAxNi4xMzQgMjAgMjAgMjBTMjcgMjIuNjg2MyAyNyAyNiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjREFBNTIwIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8cGF0aCBkPSJNMTYgMjVIMjRNMTUgMjdIMjUiIHN0cm9rZT0iI0RBQTUyMCIgc3Ryb2tlLXdpZHRoPSIxIi8+Cjwvc3ZnPgo='">
+          <span class="label">Profile</span>
         </button>
-        <button id="nav-preferences" class="nav-item" onclick="setRoute('preferences')">
-          <img src="/assets/tyton_preferences.png" alt="Preferences" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeD0iOCIgeT0iOCI+CjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjMiIHN0cm9rZT0iI0RBQTUyMCIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIi8+CjxwYXRoIGQ9Ik0xMiAxVjNNMTIgMjFWMjNNNC4yMiA0LjIyTDUuNjQgNS42NU0xOC4zNiAxOC4zNUwxOS43OCAxOS43N000LjIyIDE5Ljc4TDUuNjQgMTguMzZNMTguMzYgNS42NUwxOS43OCA0LjIzTTEgMTJIM000MiAxMkgyM00xMiAxVjNNMTIgMjFWMjMiIHN0cm9rZT0iI0RBQTUyMCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9zdmc+Cjwvc3ZnPg=='"> Preferences
+        <button id="nav-preferences" class="nav-item" onclick="setRoute('preferences')" data-label="Preferences">
+          <img src="/assets/tyton_preferences.png" alt="Preferences" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMyIgc3Ryb2tlPSIjREFBNTIwIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiLz4KPHBhdGggZD0iTTIwIDlWMTFNMjAgMjlWMzFNMTIuMjIgMTIuMjJMMTMuNjQgMTMuNjVNMjYuMzYgMjYuMzZMMjcuNzggMjcuNzhNMTIuMjIgMjcuNzhMMTMuNjQgMjYuMzZNMjYuMzYgMTMuNjVMMjcuNzggMTIuMjNNOSAyMEgxMU0zMSAyMEgzM00yMCA5VjExTTIwIDI5VjMxIiBzdHJva2U9IiNEQUE1MjAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPgo='">
+          <span class="label">Preferences</span>
         </button>
-        <button id="nav-theme" class="nav-item" onclick="setRoute('theme')">
-          <img src="/assets/tyton_theme.png" alt="Theme" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeD0iOCIgeT0iOCI+CjxwYXRoIGQ9Ik0xMiA2VjJIMTNWNkgxMlpNNC45MyA1Ljc1TDQuMjIgNy4wNkw3LjQgOC45MUw4LjExIDcuNkw0LjkzIDUuNzVaTTQgMThIMlYxOUg0VjE4Wk02LjMgMTcuN0w1IDE4LjNMNy4xIDIwLjNMOC40IDE5LjdMNi4zIDE3LjdaTTEyIDIyVjE4SDEzVjIySDEyWk0xNy42IDE5LjdMMTguOSAyMC4zTDIxIDIwLjNMMTkuNyAxOC4zTDE3LjYgMTkuN1pNMjAgMThWMTlIMjJWMThIMjBaTTE5IDE2LjlMMjAuMjUgMTcuMTVMMjIuMjUgMTVMMjEgMTQuNjVMMTkgMTYuOVpNNyAxNi45TDUgMTQuNjVMMy43NSAxNUw1Ljc1IDE3LjE1TDcgMTYuOVpNMTYgMTNIMTNWMTZIMTZWMTNaTTEyIDEyQzEzLjEgMTIgMTQgMTEuMSAxNCAxMFYzQzE0IDIuNDUgMTMuNTUgMiAxMyAySEEwQzEyLjQ1IDIgMTIgMi40NSAxMiAzVjEwQzEyIDExLjEgMTIuOSAxMiAxMiAxMloiIGZpbGw9IiNEQUE1MjAiLz4KPC9zdmc+Cjwvc3ZnPg=='"> Theme
+        <button id="nav-theme" class="nav-item" onclick="setRoute('theme')" data-label="Theme">
+          <img src="/assets/tyton_theme.png" alt="Theme" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHBhdGggZD0iTTIwIDE0VjEwSDIxVjE0SDIwWk0xMi45MyAxMy43NUwxMi4yMiAxNS4wNkwxNS40IDE2LjkxTDE2LjExIDE1LjZMMTIuOTMgMTMuNzVaTTEyIDI2SDEwVjI3SDEyVjI2Wk0xNC4zIDI1LjdMMTMgMjYuM0wxNS4xIDI4LjNMMTYuNCAyNy43TDE0LjMgMjUuN1pNMjAgMzBWMjZIMjFWMzBIMjBaTTI1LjYgMjcuN0wyNi45IDI4LjNMMjkgMjguM0wyNy43IDI2LjNMMjUuNiAyNy43Wk0yOCAyNlYyN0gzMFYyNkgyOFpNMjcgMjQuOUwyOC4yNSAyNS4xNUwzMC4yNSAyM0wyOSAyMi42NUwyNyAyNC45Wk0xNSAyNC45TDEzIDIyLjY1TDExLjc1IDIzTDEzLjc1IDI1LjE1TDE1IDI0LjlaTTI0IDIxSDIxVjI0SDI0VjIxWk0yMCAyMEMyMS4xIDIwIDIyIDE5LjEgMjIgMThWMTFDMjIgMTAuNDUgMjEuNTUgMTAgMjEgMTBIMjBDMTkuNDUgMTAgMTkgMTAuNDUgMTkgMTFWMThDMTkgMTkuMSAxOS45IDIwIDIwIDIwWiIgZmlsbD0iI0RBQTUyMCIvPgo8L3N2Zz4K'">
+          <span class="label">Theme</span>
         </button>
-        <button id="nav-help" class="nav-item" onclick="setRoute('help')">
-          <img src="/assets/tyton_help.png" alt="Help" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeD0iOCIgeT0iOCI+CjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIiBzdHJva2U9IiNEQUE1MjAiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIvPgo8cGF0aCBkPSJNMTIgMTZWMTJNMTIgOEgxMi4wMSIgc3Ryb2tlPSIjREFBNTIwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4KPC9zdmc+'"> Help & Support
+        <button id="nav-help" class="nav-item" onclick="setRoute('help')" data-label="Help">
+          <img src="/assets/tyton_help.png" alt="Help" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMTAiIHN0cm9rZT0iI0RBQTUyMCIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIi8+CjxwYXRoIGQ9Ik0yMCAyNFYyME0yMCAxNkgyMC4wMSIgc3Ryb2tlPSIjREFBNTIwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K'">
+          <span class="label">Help & Support</span>
         </button>
-        <button id="nav-about" class="nav-item" onclick="setRoute('about')">
-          <img src="/assets/tyton_about.png" alt="About" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeD0iOCIgeT0iOCI+CjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIiBzdHJva2U9IiNEQUE1MjAiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIvPgo8cGF0aCBkPSJNMTIgMTZWMTJNMTIgOEgxMi4wMSIgc3Ryb2tlPSIjREFBNTIwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4KPC9zdmc+'"> About
+        <button id="nav-about" class="nav-item" onclick="setRoute('about')" data-label="About">
+          <img src="/assets/tyton_about.png" alt="About" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMTAiIHN0cm9rZT0iI0RBQTUyMCIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIi8+CjxwYXRoIGQ9Ik0yMCAyNFYyME0yMCAxNkgyMC4wMSIgc3Ryb2tlPSIjREFBNTIwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K'">
+          <span class="label">About</span>
         </button>
-        <button id="nav-tyton-plus" class="nav-item" onclick="setRoute('tyton-plus')">
-          <img src="/assets/tyton_plus.png" alt="Tyton+" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeD0iOCIgeT0iOCI+CjxwYXRoIGQ9Ik0xMiAyTDE1LjA5IDguMjZMMjIgOUwxNyAxNEwxOC4xOCAyMUwxMiAxNy43N0w1LjgyIDIxTDcgMTRMMiA5TDguOTEgOC4yNkwxMiAyWiIgZmlsbD0iI0RBQTUyMCIgc3Ryb2tlPSIjMDUwODE0IiBzdHJva2Utd2lkdGg9IjAuNSIvPgo8dGV4dCB4PSIxMiIgeT0iMTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMwNTA4MTQiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSJib2xkIj4rPC90ZXh0Pgo8L3N2Zz4KPC9zdmc+'"> Tyton+
+        <button id="nav-tyton-plus" class="nav-item" onclick="setRoute('tyton-plus')" data-label="Tyton+">
+          <img src="/assets/tyton_plus.png" alt="Tyton+" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiMwNTA4MTQiLz4KPHBhdGggZD0iTTIwIDEwTDIzLjA5IDE2LjI2TDMwIDE3TDI1IDIyTDI2LjE4IDI5TDIwIDI1Ljc3TDEzLjgyIDI5TDE1IDIyTDEwIDE3TDE2LjkxIDE2LjI2TDIwIDEwWiIgZmlsbD0iI0RBQTUyMCIgc3Ryb2tlPSIjMDUwODE0IiBzdHJva2Utd2lkdGg9IjAuNSIvPgo8dGV4dCB4PSIyMCIgeT0iMjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMwNTA4MTQiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSJib2xkIj4rPC90ZXh0Pgo8L3N2Zz4K'">
+          <span class="label">Tyton+</span>
         </button>
         
         <!-- Weather Widget in Sidebar -->
@@ -2380,97 +2913,241 @@
         </div>
       </section>
       
-      <!-- PROJECT MANAGER PAGE -->
-      <section id="project-manager-page" style="display:none;">
+      <!-- CREATION ENGINE PAGE -->
+      <section id="creation-engine-page" style="display:none;">
         <h2 class="page-title">
-          <img src="/assets/tyton_project_manager.png" alt="Project Manager" style="width: 32px; height: 32px; margin-right: 12px; vertical-align: middle;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0iIzA1MDgxNCIvPgo8cGF0aCBkPSJNOCA0SDZDNS40NDc3MiA0IDUgNC40NDc3MiA1IDVWMTlDNSAxOS41NTIzIDUuNDQ3NzIgMjAgNiAyMEg4VjRaIiBmaWxsPSIjREFBNTIwIi8+CjxwYXRoIGQ9Ik0xOCA0SDhWMjBIMThDMTguNTUyMyAyMCAxOSAxOS41NTIzIDE5IDE5VjVDMTkgNC40NDc3MiAxOC41NTIzIDQgMTggNFoiIGZpbGw9IiNEQUE1MjAiLz4KPHBhdGggZD0iTTEwIDdIMTYiIHN0cm9rZT0iIzA1MDgxNCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPHBhdGggZD0iTTEwIDEwSDE2IiBzdHJva2U9IiMwNTA4MTQiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxwYXRoIGQ9Ik0xMCAxM0gxNCIgc3Ryb2tlPSIjMDUwODE0IiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIyIiBmaWxsPSIjREFBNTIwIiBzdHJva2U9IiMwNTA4MTQiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPgo='">
-          Tyton Project Manager
+          <img src="/assets/tyton_creation_engine.png" alt="Creation Engine" style="width: 32px; height: 32px; margin-right: 12px; vertical-align: middle;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0iIzA1MDgxNCIvPgo8Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSI2IiBmaWxsPSJub25lIiBzdHJva2U9IiNEQUE1MjAiIHN0cm9rZS13aWR0aD0iMS42Ii8+CjxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIHI9IjMiIGZpbGw9IiNEQUE1MjAiLz4KPHBhdGggZD0iTTE2IDEwVjIyTTEwIDE2SDIyTTEyLjQ0IDEyLjQ0TDE5LjU2IDE5LjU2TTE5LjU2IDEyLjQ0TDEyLjQ0IDE5LjU2IiBzdHJva2U9IiNEQUE1MjAiIHN0cm9rZS13aWR0aD0iMS42IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9zdmc+'>
+          Tyton Creation Engine
         </h2>
         
-        <!-- Tyton+ Feature Notice -->
-        <div style="text-align: center; margin: 60px auto; max-width: 800px;">
-          <div style="background: linear-gradient(135deg, var(--card) 0%, rgba(15,22,41,.9) 100%), linear-gradient(135deg, rgba(255,107,53,.08) 0%, rgba(139,92,246,.05) 50%, rgba(0,212,170,.07) 100%); border: 1px solid var(--border-subtle); border-radius: 20px; padding: 60px 40px; box-shadow: 0 20px 40px rgba(0,0,0,.3), 0 8px 16px rgba(0,0,0,.2), inset 0 1px 0 rgba(241,245,249,.08); backdrop-filter: blur(16px) saturate(180%); position: relative; overflow: hidden;">
-            
-            <!-- Tyton+ Badge -->
-            <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--gradient-primary); color: var(--ink); padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 14px; margin-bottom: 24px; box-shadow: 0 4px 12px var(--glow-primary);">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z"/>
+        <!-- PROJECT INTAKE SECTION -->
+        <div id="creation-intake" class="grid" style="grid-template-columns: 1fr 300px; gap: 24px; margin-bottom: 32px;">
+          <!-- Project Form -->
+          <div class="card">
+            <h3 style="margin-bottom: 20px; display: flex; align-items: center; gap: 12px; color: var(--white); font-weight: 600;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--gold)">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
+                <path d="M2 17L12 22L22 17M2 12L12 17L22 12"/>
               </svg>
-              Tyton+
-            </div>
-            
-            <!-- AI Icon -->
-            <div style="margin-bottom: 24px;">
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" style="color: var(--gold); margin: 0 auto; display: block;">
-                <path d="M12 2L13.09 8.26L20 9L14 14L15.09 21L12 18L8.91 21L10 14L4 9L10.91 8.26L12 2Z" fill="currentColor" opacity="0.3"/>
-                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
-                <path d="M12 1V3M12 21V23M4.22 4.22L5.64 5.64M18.36 18.36L19.78 19.78M1 12H3M21 12H23M4.22 19.78L5.64 18.36M18.36 5.64L19.78 4.22" stroke="currentColor" stroke-width="2"/>
-              </svg>
-            </div>
-            
-            <!-- Content -->
-            <h3 style="color: var(--gold); font-size: 28px; font-weight: 700; margin-bottom: 16px; letter-spacing: 1px;">
-              AI-Powered Project Builder
+              Create New Project
             </h3>
             
-            <p style="color: var(--muted); font-size: 18px; line-height: 1.6; margin-bottom: 32px;">
-              Our advanced AI assistant will help you plan, organize, and manage research projects from conception to completion. Get intelligent suggestions, automated workflows, and collaborative tools powered by cutting-edge artificial intelligence.
-            </p>
-            
-            <!-- Features List -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; margin-bottom: 40px; text-align: left;">
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--ink)">
-                    <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"/>
-                  </svg>
-                </div>
-                <span style="color: var(--white); font-weight: 500;">Smart Project Planning</span>
+            <form id="creation-project-form">
+              <div class="field">
+                <label>Project Description</label>
+                <textarea id="project-description" rows="4" placeholder="Describe what you want to build... (e.g., 'A temperature and humidity monitoring system for greenhouse automation')"></textarea>
               </div>
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--ink)">
-                    <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13M16 3.13C16.8604 3.35031 17.623 3.85071 18.1676 4.55232C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89317 18.7122 8.75608 18.1676 9.45768C17.623 10.1593 16.8604 10.6597 16 10.88"/>
-                  </svg>
+              
+              <div class="grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+                <div class="field">
+                  <label>Voltage</label>
+                  <select id="project-voltage">
+                    <option value="3.3V">3.3V</option>
+                    <option value="5V">5V</option>
+                    <option value="12V">12V</option>
+                    <option value="24V">24V</option>
+                  </select>
                 </div>
-                <span style="color: var(--white); font-weight: 500;">Team Collaboration</span>
+                <div class="field">
+                  <label>Power Budget</label>
+                  <select id="project-power">
+                    <option value="<1W">&lt;1W</option>
+                    <option value="1-5W">1-5W</option>
+                    <option value="5-10W">5-10W</option>
+                    <option value="10W+">10W+</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Size Constraint</label>
+                  <select id="project-size">
+                    <option value="small">Small</option>
+                    <option value="compact" selected>Compact</option>
+                    <option value="portable">Portable</option>
+                    <option value="large">Large</option>
+                  </select>
+                </div>
               </div>
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--ink)">
-                    <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z"/>
-                  </svg>
+              
+              <button type="submit" class="btn primary" style="width: 100%; margin-top: 16px;">
+                Start Creation Pipeline
+              </button>
+            </form>
+          </div>
+          
+          <!-- Template Sidebar -->
+          <div class="card" style="height: fit-content;">
+            <h4 style="margin-bottom: 16px; color: var(--white); font-weight: 600;">Quick Templates</h4>
+            <div class="template-list" style="display: flex; flex-direction: column; gap: 0;">
+              <button class="template-btn" onclick="applyTemplate('weather')">
+                🌡️ Weather Station
+              </button>
+              <button class="template-btn" onclick="applyTemplate('iot')">
+                📶 IoT Sensor Node
+              </button>
+              <button class="template-btn" onclick="applyTemplate('automation')">
+                🏠 Home Automation
+              </button>
+              <button class="template-btn" onclick="applyTemplate('robot')">
+                🤖 Robot Controller
+              </button>
+              <button class="template-btn" onclick="applyTemplate('display')">
+                📺 Data Display
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- PROGRESS STEPPER -->
+        <div id="creation-progress" class="card" style="display: none; margin-bottom: 24px;">
+          <div class="progress-stepper">
+            <div class="step active" data-step="parseSpec">
+              <div class="step-icon">1</div>
+              <span>Parse Spec</span>
+            </div>
+            <div class="step" data-step="decompose">
+              <div class="step-icon">2</div>
+              <span>Decompose</span>
+            </div>
+            <div class="step" data-step="sourceParts">
+              <div class="step-icon">3</div>
+              <span>Source Parts</span>
+            </div>
+            <div class="step" data-step="compatCheck">
+              <div class="step-icon">4</div>
+              <span>Compatibility</span>
+            </div>
+            <div class="step" data-step="firmware">
+              <div class="step-icon">5</div>
+              <span>Firmware</span>
+            </div>
+            <div class="step" data-step="wiring">
+              <div class="step-icon">6</div>
+              <span>Wiring</span>
+            </div>
+            <div class="step" data-step="cad">
+              <div class="step-icon">7</div>
+              <span>CAD</span>
+            </div>
+            <div class="step" data-step="simulate">
+              <div class="step-icon">8</div>
+              <span>Simulate</span>
+            </div>
+            <div class="step" data-step="docs">
+              <div class="step-icon">9</div>
+              <span>Document</span>
+            </div>
+            <div class="step" data-step="collate">
+              <div class="step-icon">10</div>
+              <span>Complete</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- DASHBOARD TABS -->
+        <div id="creation-dashboard" style="display: none;">
+          <div class="tab-nav" style="margin-bottom: 24px;">
+            <button class="tab-btn active" onclick="switchCreationTab('tasks')">Tasks</button>
+            <button class="tab-btn" onclick="switchCreationTab('bom')">BOM</button>
+            <button class="tab-btn" onclick="switchCreationTab('wiring')">Wiring</button>
+            <button class="tab-btn" onclick="switchCreationTab('firmware')">Firmware</button>
+            <button class="tab-btn" onclick="switchCreationTab('cad')">CAD</button>
+            <button class="tab-btn" onclick="switchCreationTab('simulation')">Simulation</button>
+            <button class="tab-btn" onclick="switchCreationTab('docs')">Documentation</button>
+          </div>
+          
+          <!-- Tasks Tab -->
+          <div id="tab-tasks" class="tab-content active">
+            <div class="card">
+              <h3 style="color: var(--white); font-weight: 600; margin-bottom: 20px;">Pipeline Tasks</h3>
+              <div id="tasks-list" style="display: flex; flex-direction: column; gap: 0;">
+                <div class="task-item pending">
+                  <div class="task-status">⏳</div>
+                  <div class="task-content">
+                    <h4>Parse Project Specification</h4>
+                    <p>Analyze project description and extract requirements</p>
+                  </div>
                 </div>
-                <span style="color: var(--white); font-weight: 500;">Automated Workflows</span>
-              </div>
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--ink)">
-                    <path d="M9 19C-2 19 2 3 2 3S6 1 13 1 24 3 24 3-5 19 9 19ZM20 12C20 16 16 20 12 20"/>
-                  </svg>
-                </div>
-                <span style="color: var(--white); font-weight: 500;">AI Insights & Analytics</span>
               </div>
             </div>
-            
-            <!-- Construction Notice -->
-            <div style="background: rgba(218,165,32,.1); border: 1px solid var(--border-accent); border-radius: 12px; padding: 24px; margin-bottom: 32px;">
-              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--gold)">
-                  <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
-                  <path d="M2 17L12 22L22 17M2 12L12 17L22 12"/>
-                </svg>
-                <span style="color: var(--gold); font-weight: 700; font-size: 18px;">Under Construction</span>
+          </div>
+          
+          <!-- BOM Tab -->
+          <div id="tab-bom" class="tab-content">
+            <div class="card">
+              <h3 style="color: var(--white); font-weight: 600; margin-bottom: 20px;">Bill of Materials</h3>
+              <div id="bom-content" style="color: var(--muted); padding: 20px; text-align: center; background: rgba(255,255,255,.02); border-radius: 8px;">
+                No components sourced yet.
               </div>
-              <p style="color: var(--muted); margin: 0; font-size: 16px;">
-                This Tyton+ feature is currently under development. Our team is working hard to bring you the most advanced AI-powered project management tools for research collaboration.
-              </p>
             </div>
-            
-            <!-- Coming Soon -->
-            <p style="color: var(--white); font-weight: 600; font-size: 16px; margin: 0;">
-              🚀 Coming Soon to Tyton+
-            </p>
+          </div>
+          
+          <!-- Wiring Tab -->
+          <div id="tab-wiring" class="tab-content">
+            <div class="card">
+              <h3 style="color: var(--white); font-weight: 600; margin-bottom: 20px;">Wiring Diagram</h3>
+              <div id="wiring-content" style="color: var(--muted); padding: 40px; text-align: center; background: rgba(255,255,255,.02); border-radius: 8px;">
+                Wiring diagram will appear here after component sourcing
+              </div>
+            </div>
+          </div>
+          
+          <!-- Firmware Tab -->
+          <div id="tab-firmware" class="tab-content">
+            <div class="card">
+              <h3 style="color: var(--white); font-weight: 600; margin-bottom: 20px;">Generated Firmware</h3>
+              <div id="firmware-content" style="color: var(--muted); padding: 40px; text-align: center; background: rgba(255,255,255,.02); border-radius: 8px;">
+                Firmware code will be generated during the pipeline
+              </div>
+            </div>
+          </div>
+          
+          <!-- CAD Tab -->
+          <div id="tab-cad" class="tab-content">
+            <div class="card">
+              <h3 style="color: var(--white); font-weight: 600; margin-bottom: 20px;">3D Enclosure</h3>
+              <div id="cad-content" style="color: var(--muted); padding: 40px; text-align: center; background: rgba(255,255,255,.02); border-radius: 8px;">
+                3D printable enclosure design will appear here
+              </div>
+            </div>
+          </div>
+          
+          <!-- Simulation Tab -->
+          <div id="tab-simulation" class="tab-content">
+            <div class="card">
+              <h3 style="color: var(--white); font-weight: 600; margin-bottom: 20px;">Circuit Simulation</h3>
+              <div id="simulation-content" style="color: var(--muted); padding: 40px; text-align: center; background: rgba(255,255,255,.02); border-radius: 8px;">
+                Simulation results and analysis will appear here
+              </div>
+            </div>
+          </div>
+          
+          <!-- Documentation Tab -->
+          <div id="tab-docs" class="tab-content">
+            <div class="card">
+              <h3 style="color: var(--white); font-weight: 600; margin-bottom: 20px;">Project Documentation</h3>
+              <div id="docs-content" style="color: var(--muted); padding: 40px; text-align: center; background: rgba(255,255,255,.02); border-radius: 8px;">
+                Comprehensive project documentation will be generated
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- EXPORT ACTIONS -->
+        <div id="creation-exports" class="card" style="display: none;">
+          <h3 style="color: var(--white); font-weight: 600; margin-bottom: 20px;">Export & Fabrication</h3>
+          <div class="export-actions" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+            <button class="btn secondary" onclick="exportProject('zip')" style="background: rgba(255,255,255,.05); border: 1px solid var(--ring); color: var(--white);">
+              📁 Download Project ZIP
+            </button>
+            <button class="btn secondary" onclick="exportProject('3dprint')" style="background: rgba(255,255,255,.05); border: 1px solid var(--ring); color: var(--white);">
+              🖨️ Send to 3D Printing Service
+            </button>
+            <button class="btn secondary" onclick="exportProject('pcb')" style="background: rgba(255,255,255,.05); border: 1px solid var(--ring); color: var(--white);">
+              🔧 Order PCB Fabrication
+            </button>
+            <button class="btn secondary" onclick="exportProject('docs')" style="background: rgba(255,255,255,.05); border: 1px solid var(--ring); color: var(--white);">
+              📄 Generate PDF Documentation
+            </button>
           </div>
         </div>
       </section>
@@ -4572,7 +5249,7 @@
       document.getElementById('group-detail-page').style.display = 'none';
       document.getElementById('discussions-page').style.display = 'none';
       document.getElementById('journal-page').style.display = 'none';
-      document.getElementById('project-manager-page').style.display = 'none';
+      document.getElementById('creation-engine-page').style.display = 'none';
       document.getElementById('blog-page').style.display = 'none';
       document.getElementById('tyton-plus-page').style.display = 'none';
       document.getElementById('profile-page').style.display = 'none';
@@ -4598,7 +5275,7 @@
       document.getElementById('group-detail-page').style.display = 'none';
       document.getElementById('discussions-page').style.display = 'none';
       document.getElementById('journal-page').style.display = 'none';
-      document.getElementById('project-manager-page').style.display = 'none';
+      document.getElementById('creation-engine-page').style.display = 'none';
       document.getElementById('blog-page').style.display = 'none';
       document.getElementById('tyton-plus-page').style.display = 'none';
       document.getElementById('profile-page').style.display = 'none';
@@ -6470,6 +7147,262 @@ As gravitational wave astronomy matures from discovery science to precision meas
     }
     
     // Initialize when page loads
+    // Creation Engine Functions
+    let currentProject = null;
+    
+    function applyTemplate(templateType) {
+      const templates = {
+        weather: 'A temperature and humidity monitoring system with wireless data transmission',
+        iot: 'IoT sensor node with multiple environmental sensors and cloud connectivity',
+        automation: 'Home automation controller with relay outputs and sensor inputs',
+        robot: 'Robotic system controller with motor drivers and sensor integration',
+        display: 'Data display system with OLED screen and real-time sensor readings'
+      };
+      
+      document.getElementById('project-description').value = templates[templateType] || '';
+    }
+    
+    function switchCreationTab(tabName) {
+      // Remove active from all tabs
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      // Add active to selected tab
+      document.querySelector(`[onclick="switchCreationTab('${tabName}')"]`).classList.add('active');
+      document.getElementById(`tab-${tabName}`).classList.add('active');
+    }
+    
+    async function startCreationPipeline(description, constraints) {
+      try {
+        showNotification('Starting Creation Engine pipeline...', 'info');
+        
+        // Show progress stepper and dashboard
+        document.getElementById('creation-progress').style.display = 'block';
+        document.getElementById('creation-dashboard').style.display = 'block';
+        document.getElementById('creation-exports').style.display = 'block';
+        
+        // Create project
+        const response = await fetch('/api/ce/projects', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify({
+            summary: description,
+            constraints: constraints
+          })
+        });
+        
+        if (!response.ok) throw new Error('Failed to create project');
+        
+        const project = await response.json();
+        currentProject = project.data;
+        
+        showNotification(`Project created: ${project.data.id}`, 'success');
+        
+        // Start pipeline execution
+        await runCreationPipeline(project.data.id);
+        
+      } catch (error) {
+        console.error('Creation pipeline failed:', error);
+        showNotification(`Pipeline failed: ${error.message}`, 'error');
+      }
+    }
+    
+    async function runCreationPipeline(projectId) {
+      try {
+        // Queue pipeline run
+        const response = await fetch(`/api/ce/projects/${projectId}/run`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        
+        if (!response.ok) throw new Error('Failed to start pipeline');
+        
+        const run = await response.json();
+        showNotification('Pipeline execution started', 'success');
+        
+        // Poll for updates
+        pollPipelineStatus(run.data.id);
+        
+      } catch (error) {
+        console.error('Failed to run pipeline:', error);
+        showNotification(`Failed to start pipeline: ${error.message}`, 'error');
+      }
+    }
+    
+    async function pollPipelineStatus(runId) {
+      // In a real implementation, this would poll the backend for status
+      // For now, simulate pipeline progress
+      const stages = ['parseSpec', 'decompose', 'sourceParts', 'compatCheck', 'firmware', 'wiring', 'cad', 'simulate', 'docs', 'collate'];
+      
+      for (let i = 0; i < stages.length; i++) {
+        await new Promise(resolve => setTimeout(resolve, 2000)); // 2 second delay
+        
+        // Update progress stepper
+        updateProgressStep(stages[i], 'completed');
+        
+        if (i < stages.length - 1) {
+          updateProgressStep(stages[i + 1], 'active');
+        }
+        
+        // Update task list
+        updateTaskStatus(stages[i], 'completed');
+        
+        showNotification(`Completed: ${stages[i]}`, 'info');
+      }
+      
+      showNotification('Creation pipeline completed successfully!', 'success');
+      await loadProjectResults(currentProject.id);
+    }
+    
+    function updateProgressStep(stage, status) {
+      const step = document.querySelector(`[data-step="${stage}"]`);
+      if (step) {
+        step.classList.remove('active', 'completed');
+        step.classList.add(status);
+      }
+    }
+    
+    function updateTaskStatus(stage, status) {
+      // This would update the task list in the Tasks tab
+      // For now, just show a placeholder
+    }
+    
+    async function loadProjectResults(projectId) {
+      try {
+        // Load BOM
+        const bomResponse = await fetch(`/api/ce/projects/${projectId}/bom`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        
+        if (bomResponse.ok) {
+          const bomData = await bomResponse.json();
+          displayBOM(bomData.data);
+        }
+        
+        // Load project details
+        const projectResponse = await fetch(`/api/ce/projects/${projectId}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        
+        if (projectResponse.ok) {
+          const projectData = await projectResponse.json();
+          displayProjectResults(projectData.data);
+        }
+        
+      } catch (error) {
+        console.error('Failed to load results:', error);
+      }
+    }
+    
+    function displayBOM(bomData) {
+      const bomContent = document.getElementById('bom-content');
+      if (bomData && bomData.length > 0) {
+        let html = '<table style="width: 100%; border-collapse: collapse;"><tr><th>Qty</th><th>Component</th><th>Specifications</th><th>Price</th></tr>';
+        
+        let totalCost = 0;
+        for (const item of bomData) {
+          const price = item.component.price || 0;
+          totalCost += price * (item.quantity || 1);
+          
+          html += `<tr>
+            <td>${item.quantity || 1}</td>
+            <td>${item.component.title}</td>
+            <td>${item.component.specs ? Object.entries(item.component.specs).map(([k,v]) => `${k}: ${v}`).join(', ') : 'N/A'}</td>
+            <td>$${price.toFixed(2)}</td>
+          </tr>`;
+        }
+        
+        html += `<tr><td colspan="3"><strong>Total Cost</strong></td><td><strong>$${totalCost.toFixed(2)}</strong></td></tr></table>`;
+        bomContent.innerHTML = html;
+      }
+    }
+    
+    function displayProjectResults(projectData) {
+      // Display results in various tabs
+      if (projectData.artifacts) {
+        for (const artifact of projectData.artifacts) {
+          switch (artifact.type) {
+            case 'wiring_svg':
+              document.getElementById('wiring-content').innerHTML = `<div style="background: white; border-radius: 8px; padding: 20px;">${artifact.content}</div>`;
+              break;
+            case 'firmware_zip':
+              document.getElementById('firmware-content').innerHTML = `<pre style="text-align: left; background: #0a0f1c; padding: 20px; border-radius: 8px; overflow-x: auto;"><code>${artifact.content || 'Firmware files generated'}</code></pre>`;
+              break;
+            case 'enclosure_stl':
+              document.getElementById('cad-content').innerHTML = `<div style="text-align: center;"><p>3D Model Generated</p><p>Download STL: <a href="${artifact.url}" download>enclosure.stl</a></p></div>`;
+              break;
+            case 'simulation_results':
+              document.getElementById('simulation-content').innerHTML = `<div>${artifact.content}</div>`;
+              break;
+            case 'documentation':
+              document.getElementById('docs-content').innerHTML = `<div style="text-align: left; max-height: 400px; overflow-y: auto;"><pre>${artifact.content}</pre></div>`;
+              break;
+          }
+        }
+      }
+    }
+    
+    async function exportProject(format) {
+      if (!currentProject) {
+        showNotification('No active project to export', 'error');
+        return;
+      }
+      
+      try {
+        const response = await fetch(`/api/ce/export/${currentProject.id}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify({ format })
+        });
+        
+        if (!response.ok) throw new Error('Export failed');
+        
+        const result = await response.json();
+        showNotification(`Export successful: ${result.data.filename}`, 'success');
+        
+        // In a real implementation, this would trigger a download
+        
+      } catch (error) {
+        console.error('Export failed:', error);
+        showNotification(`Export failed: ${error.message}`, 'error');
+      }
+    }
+    
+    // Form submission handler
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('creation-project-form');
+      if (form) {
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          
+          const description = document.getElementById('project-description').value;
+          const voltage = document.getElementById('project-voltage').value;
+          const power = document.getElementById('project-power').value;
+          const size = document.getElementById('project-size').value;
+          
+          if (!description.trim()) {
+            showNotification('Please enter a project description', 'error');
+            return;
+          }
+          
+          const constraints = { voltage, power, size };
+          await startCreationPipeline(description, constraints);
+        });
+      }
+    });
+
     document.addEventListener('DOMContentLoaded', async () => {
       await init();
       // Check if new user after a short delay

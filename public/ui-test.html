@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Creation Engine UI Test</title>
+    <style>
+        body { 
+            background: #060b16; 
+            color: #f0f9ff; 
+            font-family: Arial, sans-serif; 
+            padding: 20px;
+        }
+        .test-result { 
+            padding: 10px; 
+            margin: 10px 0; 
+            border-radius: 5px;
+        }
+        .pass { background: rgba(34,197,94,.1); border: 1px solid #22c55e; }
+        .fail { background: rgba(239,68,68,.1); border: 1px solid #ef4444; }
+    </style>
+</head>
+<body>
+    <h1>Creation Engine UI Fixes Test</h1>
+    <div id="test-results"></div>
+
+    <script>
+        async function testCreationEngineUI() {
+            const results = [];
+            
+            // Test 1: Check if main page loads
+            try {
+                const response = await fetch('/');
+                const html = await response.text();
+                results.push({
+                    test: "Main page loads",
+                    pass: response.ok,
+                    details: response.ok ? "✓ Page loads successfully" : "✗ Failed to load"
+                });
+                
+                // Test 2: Check Creation Engine section exists
+                const hasCreationEngine = html.includes('creation-engine-page');
+                results.push({
+                    test: "Creation Engine section exists",
+                    pass: hasCreationEngine,
+                    details: hasCreationEngine ? "✓ Found creation-engine-page section" : "✗ Creation Engine section missing"
+                });
+                
+                // Test 3: Check CSS styling is present
+                const hasCustomCSS = html.includes('Creation Engine Styles');
+                results.push({
+                    test: "Creation Engine CSS styles present", 
+                    pass: hasCustomCSS,
+                    details: hasCustomCSS ? "✓ Custom CSS styles found" : "✗ Custom styles missing"
+                });
+                
+                // Test 4: Check color variables are defined
+                const hasColorVars = html.includes('--white:#f0f9ff') && html.includes('--gold:#daa520');
+                results.push({
+                    test: "Color variables defined",
+                    pass: hasColorVars,
+                    details: hasColorVars ? "✓ Color variables properly defined" : "✗ Color variables missing"
+                });
+                
+                // Test 5: Check responsive styles exist
+                const hasResponsive = html.includes('Responsive Creation Engine Styles');
+                results.push({
+                    test: "Responsive styling present",
+                    pass: hasResponsive,
+                    details: hasResponsive ? "✓ Responsive CSS found" : "✗ Responsive styles missing"
+                });
+                
+            } catch (error) {
+                results.push({
+                    test: "Basic connectivity",
+                    pass: false,
+                    details: "✗ Failed to connect: " + error.message
+                });
+            }
+            
+            // Display results
+            const resultsDiv = document.getElementById('test-results');
+            results.forEach(result => {
+                const div = document.createElement('div');
+                div.className = `test-result ${result.pass ? 'pass' : 'fail'}`;
+                div.innerHTML = `<strong>${result.test}:</strong> ${result.details}`;
+                resultsDiv.appendChild(div);
+            });
+            
+            const passCount = results.filter(r => r.pass).length;
+            const totalCount = results.length;
+            
+            const summary = document.createElement('div');
+            summary.className = 'test-result';
+            summary.style.marginTop = '20px';
+            summary.innerHTML = `<strong>Summary: ${passCount}/${totalCount} tests passed</strong>`;
+            resultsDiv.appendChild(summary);
+        }
+        
+        // Run tests when page loads
+        window.onload = testCreationEngineUI;
+    </script>
+</body>
+</html>

@@ -446,6 +446,271 @@ app.post('/api/upload', authManager.requireAuth, (req, res, next) => {
   });
 });
 
+// Creation Engine API Endpoints
+app.post('/api/ce/projects', authManager.requireAuth, async (req, res) => {
+  try {
+    const { summary, templateId } = req.body;
+    
+    if (!summary && !templateId) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Either summary or templateId is required' 
+      });
+    }
+    
+    // Safety validation - reject hazardous projects
+    const hazardousKeywords = ['weapon', 'explosive', 'bomb', 'gun', 'high voltage', 'mains', '110v', '220v', '240v', 'hazardous chemical'];
+    if (summary && hazardousKeywords.some(keyword => summary.toLowerCase().includes(keyword))) {
+      return res.status(400).json({
+        success: false,
+        error: 'Project contains potentially hazardous elements. Please consider safer alternatives.',
+        alternatives: 'Consider low-voltage alternatives, simulation-based projects, or educational demonstrations.'
+      });
+    }
+    
+    const projectId = `ce_proj_${crypto.randomUUID()}`;
+    const project = {
+      id: projectId,
+      userId: req.user.id,
+      title: summary ? summary.substring(0, 100) + '...' : `Template Project ${templateId}`,
+      summary: summary || `Project generated from template ${templateId}`,
+      spec: null, // Will be filled by pipeline
+      status: 'created',
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    };
+    
+    const data = JSON.parse(await fs.readFile(DATA_FILE, 'utf8'));
+    data.creation_engine.projects.push(project);
+    await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2));
+    
+    res.status(201).json({
+      success: true,
+      data: { projectId },
+      message: 'Creation Engine project created successfully'
+    });
+  } catch (error) {
+    console.error('CE Project creation error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to create project' 
+    });
+  }
+});
+
+app.post('/api/ce/projects/:id/run', authManager.requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const data = JSON.parse(await fs.readFile(DATA_FILE, 'utf8'));
+    const project = data.creation_engine.projects.find(p => p.id === id && p.userId === req.user.id);
+    
+    if (!project) {
+      return res.status(404).json({ 
+        success: false, 
+        error: 'Project not found or access denied' 
+      });
+    }
+    
+    const runId = `ce_run_${crypto.randomUUID()}`;
+    const run = {
+      id: runId,
+      projectId: id,
+      status: 'queued',
+      stages: ['parseSpec', 'decompose', 'sourceParts', 'compatCheck', 'firmware', 'wiring', 'cad', 'simulate', 'docs', 'collate'],
+      currentStage: 'parseSpec',
+      createdAt: Date.now()
+    };
+    
+    data.creation_engine.runs.push(run);
+    
+    // Update project status
+    project.status = 'running';
+    project.updatedAt = Date.now();
+    
+    await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2));
+    
+    // TODO: Queue actual pipeline execution
+    // For MVP, we'll simulate immediate completion
+    setTimeout(async () => {
+      try {
+        const updatedData = JSON.parse(await fs.readFile(DATA_FILE, 'utf8'));
+        const targetRun = updatedData.creation_engine.runs.find(r => r.id === runId);
+        const targetProject = updatedData.creation_engine.projects.find(p => p.id === id);
+        
+        if (targetRun && targetProject) {
+          targetRun.status = 'completed';
+          targetRun.currentStage = 'collate';
+          targetProject.status = 'completed';
+          targetProject.spec = {
+            title: project.summary.substring(0, 50),
+            goals: project.summary,
+            constraints: { budgetUsd: 100, sizeMm: [100, 100, 50], environment: 'indoor', powerSource: 'USB', timelineWeeks: 2 },
+            io: { sensors: ['temperature'], actuators: ['led'], interfaces: ['I2C', 'USB'] },
+            performance: { samplingHz: 1, latencyMs: 100, runtimeHours: 24 },
+            deliverables: ['firmware', 'enclosure', 'docs', 'wiring']
+          };
+          await fs.writeFile(DATA_FILE, JSON.stringify(updatedData, null, 2));
+        }
+      } catch (error) {
+        console.error('Pipeline simulation error:', error);
+      }
+    }, 2000);
+    
+    res.json({
+      success: true,
+      data: { runId, status: 'queued' },
+      message: 'Pipeline execution queued'
+    });
+  } catch (error) {
+    console.error('CE Pipeline run error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to start pipeline run' 
+    });
+  }
+});
+
+app.get('/api/ce/projects/:id', authManager.requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const data = JSON.parse(await fs.readFile(DATA_FILE, 'utf8'));
+    const project = data.creation_engine.projects.find(p => p.id === id && p.userId === req.user.id);
+    
+    if (!project) {
+      return res.status(404).json({ 
+        success: false, 
+        error: 'Project not found or access denied' 
+      });
+    }
+    
+    const tasks = data.creation_engine.tasks.filter(t => t.projectId === id);
+    const artifacts = data.creation_engine.artifacts.filter(a => a.projectId === id);
+    const runs = data.creation_engine.runs.filter(r => r.projectId === id);
+    
+    res.json({
+      success: true,
+      data: { 
+        project, 
+        tasks, 
+        artifacts, 
+        runs 
+      }
+    });
+  } catch (error) {
+    console.error('CE Project get error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to retrieve project' 
+    });
+  }
+});
+
+app.get('/api/ce/projects/:id/bom', authManager.requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const data = JSON.parse(await fs.readFile(DATA_FILE, 'utf8'));
+    const project = data.creation_engine.projects.find(p => p.id === id && p.userId === req.user.id);
+    
+    if (!project) {
+      return res.status(404).json({ 
+        success: false, 
+        error: 'Project not found or access denied' 
+      });
+    }
+    
+    const bomItems = data.creation_engine.bom.filter(b => b.projectId === id);
+    const enrichedBom = bomItems.map(item => {
+      const component = data.component_cache.find(c => c.id === item.componentId);
+      return {
+        ...item,
+        component: component || null
+      };
+    });
+    
+    res.json({
+      success: true,
+      data: enrichedBom
+    });
+  } catch (error) {
+    console.error('CE BOM get error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to retrieve BOM' 
+    });
+  }
+});
+
+app.post('/api/ce/export/:id', authManager.requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const data = JSON.parse(await fs.readFile(DATA_FILE, 'utf8'));
+    const project = data.creation_engine.projects.find(p => p.id === id && p.userId === req.user.id);
+    
+    if (!project) {
+      return res.status(404).json({ 
+        success: false, 
+        error: 'Project not found or access denied' 
+      });
+    }
+    
+    // For MVP, return a placeholder ZIP URL
+    const zipUrl = `/exports/${id}/project-export.zip`;
+    
+    res.json({
+      success: true,
+      data: { zipUrl },
+      message: 'Export package ready for download'
+    });
+  } catch (error) {
+    console.error('CE Export error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to create export' 
+    });
+  }
+});
+
+// Partner integration stub endpoints (feature-flagged)
+app.post('/api/partners/print', authManager.requireAuth, async (req, res) => {
+  const printPartnersEnabled = process.env.FEATURE_PRINT_PARTNERS === 'true';
+  
+  if (!printPartnersEnabled) {
+    return res.status(501).json({ 
+      success: false, 
+      error: 'Print partner integration not enabled' 
+    });
+  }
+  
+  // Stub implementation
+  res.json({
+    success: true,
+    data: { status: 'queued' },
+    message: 'Print job queued with partner service'
+  });
+});
+
+app.post('/api/partners/pcb', authManager.requireAuth, async (req, res) => {
+  const pcbPartnersEnabled = process.env.FEATURE_PCB_PARTNERS === 'true';
+  
+  if (!pcbPartnersEnabled) {
+    return res.status(501).json({ 
+      success: false, 
+      error: 'PCB partner integration not enabled' 
+    });
+  }
+  
+  // Stub implementation
+  res.json({
+    success: true,
+    data: { status: 'queued' },
+    message: 'PCB fabrication queued with partner service'
+  });
+});
+
 app.get('/api/data', authManager.optionalAuth, async (req, res) => {
   try {
     const data = await loadData();
@@ -1708,6 +1973,16 @@ app.put('/api/journal/:id/like', authManager.requireAuth, async (req, res) => {
     console.error('Error toggling paper like:', error);
     res.status(500).json({ error: 'Failed to update like' });
   }
+});
+
+// Health check endpoint  
+app.get('/health', (req, res) => {
+  res.json({ 
+    ok: true, 
+    version: '0.2.0-alpha',
+    timestamp: new Date().toISOString(),
+    service: 'Tyton API'
+  });
 });
 
 app.listen(PORT, async () => {
