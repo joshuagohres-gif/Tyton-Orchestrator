@@ -1,0 +1,361 @@
+name: Production Deployment
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+      force_deploy:
+        description: 'Force deployment (skip some checks)'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  NODE_VERSION: '18'
+
+jobs:
+  # Pre-deployment validation
+  validate:
+    name: Pre-deployment Validation
+    runs-on: ubuntu-latest
+    outputs:
+      deploy_env: ${{ steps.set-env.outputs.deploy_env }}
+      image_tag: ${{ steps.set-tag.outputs.image_tag }}
+    
+    steps:
+      - name: Determine deployment environment
+        id: set-env
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "deploy_env=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            echo "deploy_env=production" >> $GITHUB_OUTPUT
+          else
+            echo "deploy_env=staging" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set image tag
+        id: set-tag
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            echo "image_tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          else
+            echo "image_tag=latest" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Validate deployment readiness
+        run: |
+          echo "🔍 Validating deployment for ${{ steps.set-env.outputs.deploy_env }}"
+          echo "📦 Image tag: ${{ steps.set-tag.outputs.image_tag }}"
+
+  # Build and push Docker image
+  build-image:
+    name: Build & Push Image
+    runs-on: ubuntu-latest
+    needs: validate
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,prefix=sha-
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            NODE_ENV=production
+            BUILD_DATE=${{ steps.meta.outputs.created }}
+            VCS_REF=${{ github.sha }}
+
+  # Deploy to staging
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [validate, build-image]
+    if: needs.validate.outputs.deploy_env == 'staging' || needs.validate.outputs.deploy_env == 'production'
+    environment:
+      name: staging
+      url: https://staging.tyton-orchestrator.example.com
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.28.0'
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --region us-west-2 --name tyton-staging-cluster
+
+      - name: Deploy to staging
+        run: |
+          envsubst < k8s/staging/deployment.yaml | kubectl apply -f -
+          kubectl rollout status deployment/tyton-orchestrator -n staging --timeout=600s
+        env:
+          IMAGE_TAG: ${{ needs.validate.outputs.image_tag }}
+          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+          REDIS_URL: ${{ secrets.STAGING_REDIS_URL }}
+          JWT_SECRET: ${{ secrets.STAGING_JWT_SECRET }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Run smoke tests
+        run: |
+          kubectl run smoke-test --image=curlimages/curl:latest --rm -i --restart=Never -- \
+            curl -f http://tyton-orchestrator.staging.svc.cluster.local:3000/api/health || exit 1
+
+      - name: Update deployment status
+        run: |
+          echo "✅ Staging deployment successful"
+          echo "🔗 URL: https://staging.tyton-orchestrator.example.com"
+
+  # Production deployment (requires manual approval)
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [validate, build-image, deploy-staging]
+    if: needs.validate.outputs.deploy_env == 'production' && success()
+    environment:
+      name: production
+      url: https://tyton-orchestrator.example.com
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.28.0'
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --region us-west-2 --name tyton-production-cluster
+
+      - name: Pre-deployment backup
+        run: |
+          kubectl create job db-backup-$(date +%Y%m%d%H%M%S) \
+            --from=cronjob/db-backup -n production
+
+      - name: Deploy to production
+        run: |
+          envsubst < k8s/production/deployment.yaml | kubectl apply -f -
+          kubectl rollout status deployment/tyton-orchestrator -n production --timeout=900s
+        env:
+          IMAGE_TAG: ${{ needs.validate.outputs.image_tag }}
+          DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+          REDIS_URL: ${{ secrets.PROD_REDIS_URL }}
+          JWT_SECRET: ${{ secrets.PROD_JWT_SECRET }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Run health checks
+        run: |
+          # Wait for deployment to be ready
+          sleep 30
+          
+          # Run comprehensive health checks
+          kubectl run health-check --image=curlimages/curl:latest --rm -i --restart=Never -- \
+            curl -f http://tyton-orchestrator.production.svc.cluster.local:3000/api/health/comprehensive
+          
+          # Check database connectivity
+          kubectl run db-check --image=curlimages/curl:latest --rm -i --restart=Never -- \
+            curl -f http://tyton-orchestrator.production.svc.cluster.local:3000/api/health/database
+
+      - name: Run post-deployment tests
+        run: |
+          # Run critical API tests
+          npm run test:critical
+
+      - name: Update deployment record
+        run: |
+          echo "✅ Production deployment successful"
+          echo "🚀 Version: ${{ needs.validate.outputs.image_tag }}"
+          echo "🔗 URL: https://tyton-orchestrator.example.com"
+
+  # Database migration job
+  migrate-database:
+    name: Database Migration
+    runs-on: ubuntu-latest
+    needs: [validate, build-image]
+    if: needs.validate.outputs.deploy_env != 'staging' || github.event.inputs.force_deploy != 'true'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: Run database migrations
+        run: |
+          if [[ "${{ needs.validate.outputs.deploy_env }}" == "production" ]]; then
+            npm run db:migrate:prod
+          else
+            npm run db:migrate:staging
+          fi
+        env:
+          DATABASE_URL: ${{ needs.validate.outputs.deploy_env == 'production' && secrets.PROD_DATABASE_URL || secrets.STAGING_DATABASE_URL }}
+
+  # Performance monitoring
+  monitor-deployment:
+    name: Monitor Deployment
+    runs-on: ubuntu-latest
+    needs: [deploy-staging]
+    if: success()
+    
+    steps:
+      - name: Setup monitoring
+        run: |
+          echo "🔍 Setting up post-deployment monitoring..."
+
+      - name: Monitor for 10 minutes
+        run: |
+          end_time=$(($(date +%s) + 600)) # 10 minutes
+          
+          while [[ $(date +%s) -lt $end_time ]]; do
+            # Check health endpoint
+            if ! curl -f -s https://staging.tyton-orchestrator.example.com/api/health; then
+              echo "❌ Health check failed"
+              exit 1
+            fi
+            
+            # Check error rates
+            error_rate=$(curl -s https://staging.tyton-orchestrator.example.com/api/metrics | jq -r '.errorRate // 0')
+            if (( $(echo "$error_rate > 0.05" | bc -l) )); then
+              echo "⚠️  High error rate detected: $error_rate"
+            fi
+            
+            sleep 30
+          done
+          
+          echo "✅ Monitoring completed - no issues detected"
+
+  # Rollback on failure
+  rollback:
+    name: Rollback Deployment
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production]
+    if: failure() && !cancelled()
+    
+    steps:
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.28.0'
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Rollback deployment
+        run: |
+          if [[ "${{ needs.validate.outputs.deploy_env }}" == "production" ]]; then
+            aws eks update-kubeconfig --region us-west-2 --name tyton-production-cluster
+            kubectl rollout undo deployment/tyton-orchestrator -n production
+            kubectl rollout status deployment/tyton-orchestrator -n production --timeout=600s
+          else
+            aws eks update-kubeconfig --region us-west-2 --name tyton-staging-cluster
+            kubectl rollout undo deployment/tyton-orchestrator -n staging
+            kubectl rollout status deployment/tyton-orchestrator -n staging --timeout=600s
+          fi
+
+      - name: Notify rollback
+        run: |
+          echo "🔄 Deployment rolled back due to failure"
+          echo "Please investigate the issues and try again"
+
+  # Post-deployment notifications
+  notify-success:
+    name: Notify Success
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production, monitor-deployment]
+    if: success()
+    
+    steps:
+      - name: Send success notification
+        run: |
+          echo "🎉 Deployment successful!"
+          echo "Environment: ${{ needs.validate.outputs.deploy_env }}"
+          echo "Version: ${{ needs.validate.outputs.image_tag }}"
+          echo "Time: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+
+  notify-failure:
+    name: Notify Failure
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production, monitor-deployment, rollback]
+    if: failure()
+    
+    steps:
+      - name: Send failure notification
+        run: |
+          echo "❌ Deployment failed!"
+          echo "Environment: ${{ needs.validate.outputs.deploy_env }}"
+          echo "Please check the logs and investigate"

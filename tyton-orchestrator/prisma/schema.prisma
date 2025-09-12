@@ -1,0 +1,239 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  userId      String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  modules     Module[]
+  connections Connection[]
+  promptRuns  PromptRun[]
+  bomItems    BomItem[]
+  suppliers   Supplier[]
+  reviewId    String?   @unique
+  status      String?   @default("draft")
+  canvasJson  String?
+  llmBudget   Float?
+  auditLogs   AuditLog[]
+}
+
+model FailedStage {
+  id          String    @id @default(cuid())
+  projectId   String
+  stageName   String
+  inputData   String
+  error       String
+  timestamp   DateTime  @default(now())
+}
+
+model Module {
+  id           String  @id @default(cuid())
+  projectId    String
+  project      Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  kind         String
+  label        String
+  componentRef String?
+  detailsMd    String?
+  firmwareCode String?
+  testingMd    String?
+  metadata     String?
+
+  @@unique([projectId, kind])
+}
+
+model Connection {
+  id           String @id @default(cuid())
+  projectId    String
+  project      Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  fromModuleId String
+  toModuleId   String
+  type         String
+  label        String?
+  metadata     String?
+}
+
+model PromptRun {
+  id         String   @id @default(cuid())
+  projectId  String
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  stage      String
+  inputJson  String
+  outputJson String?
+  outputText String?
+  status     String   @default("success")
+  error      String?
+  createdAt  DateTime @default(now())
+}
+
+model BomItem {
+  id           String  @id @default(cuid())
+  projectId    String
+  project      Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  category     String
+  partNumber   String
+  description  String
+  quantity     Int
+  unitCost     Float?
+  extendedCost Float?
+  notes        String?
+}
+
+model Supplier {
+  id           String  @id @default(cuid())
+  projectId    String
+  project      Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  partNumber   String
+  supplier     String
+  availability String?
+  datasheetUrl String?
+  purchaseUrl  String?
+  altPartsJson String?
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  action    String
+  detail    String
+  createdAt DateTime @default(now())
+}
+
+model OrchestratorRun {
+  id           String      @id @default(cuid())
+  projectId    String
+  status       String      // idle|running|paused|waiting_review|error|done
+  contextJson  String      // JSON text for SQLite compatibility
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  stageRuns    StageRun[]
+  reviewGates  ReviewGate[]
+
+  @@index([projectId, status])
+  @@index([status, updatedAt])
+}
+
+model StageRun {
+  id             String     @id @default(cuid())
+  orchestratorId String
+  orchestrator   OrchestratorRun @relation(fields: [orchestratorId], references: [id], onDelete: Cascade)
+  stageId        String
+  status         String     // pending|running|waiting_review|error|done
+  attempts       Int        @default(0)
+  errorCode      String?
+  errorMessage   String?
+  inputJson      String?    // JSON text
+  outputJson     String?    // JSON text
+  startedAt      DateTime?
+  finishedAt     DateTime?
+
+  @@unique([orchestratorId, stageId])
+  @@index([orchestratorId, status])
+  @@index([stageId, status])
+}
+
+model ReviewGate {
+  id             String     @id @default(cuid())
+  orchestratorId String
+  orchestrator   OrchestratorRun @relation(fields: [orchestratorId], references: [id], onDelete: Cascade)
+  stageId        String
+  status         String     // open|approved|rejected
+  notes          String?
+  payloadJson    String?    // JSON text
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+}
+
+model ComponentLibrary {
+  id          String   @id @default(cuid())
+  mpn         String   @unique
+  category    String?
+  value       String?
+  symbol      String?  // KiCad symbol (e.g., "Device:R_Small")
+  footprint   String?  // KiCad footprint (e.g., "Resistor_SMD:R_0603_1608Metric")
+  meta        String?  // JSON as text for SQLite
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([mpn, category])  // Composite index for searches
+  @@index([value])          // For value-based searches
+  @@index([footprint])      // For footprint searches
+}
+
+// Authentication & Authorization Models
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String?
+  roles        String   @default("user") // JSON array of roles
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  apiKeys        ApiKey[]
+  projectMembers ProjectMember[]
+  llmUsage       LlmUsage[]
+
+  @@index([email])
+  @@index([createdAt])
+}
+
+model ApiKey {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  hashedKey   String    @unique
+  createdAt   DateTime  @default(now())
+  lastUsedAt  DateTime?
+
+  @@index([hashedKey])
+  @@index([userId])
+}
+
+model ProjectMember {
+  id        String  @id @default(cuid())
+  projectId String
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      String  // viewer, editor, admin
+
+  @@unique([projectId, userId])
+  @@index([projectId])
+  @@index([userId])
+}
+
+// LLM Cost Tracking & Budget Models
+
+model LlmUsage {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId        String?
+  model            String
+  promptTokens     Int      @default(0)
+  completionTokens Int      @default(0)
+  totalTokens      Int      @default(0)
+  cost             Float    @default(0.0)
+  cached           Boolean  @default(false)
+  createdAt        DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([projectId, createdAt])
+  @@index([model, createdAt])
+  @@index([createdAt]) // For time-based analytics
+  @@index([cost])      // For budget analytics
+}

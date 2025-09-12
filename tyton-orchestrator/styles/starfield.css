@@ -1,0 +1,128 @@
+/* Starry Night Background Effects */
+.starry-sky {
+  background:
+    /* Gold accent gradients */
+    radial-gradient(1200px 700px at 80% -10%, rgba(212, 175, 55, 0.08), transparent 60%),
+    radial-gradient(800px 500px at 10% -20%, rgba(212, 175, 55, 0.05), transparent 60%),
+    /* Base gradient from light to dark */
+    linear-gradient(180deg, var(--bg) 0%, var(--black-900) 60%);
+  background-attachment: fixed;
+}
+
+/* Star layers using SVG data URIs */
+.stars {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.stars::before,
+.stars::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900"><g fill="white" opacity="0.6"><circle cx="123" cy="145" r="0.8"/><circle cx="234" cy="67" r="0.6"/><circle cx="456" cy="189" r="1"/><circle cx="567" cy="234" r="0.7"/><circle cx="678" cy="123" r="0.5"/><circle cx="789" cy="278" r="0.9"/><circle cx="890" cy="156" r="0.6"/><circle cx="1012" cy="201" r="0.8"/><circle cx="1123" cy="89" r="0.7"/><circle cx="1234" cy="267" r="0.5"/><circle cx="1345" cy="145" r="0.9"/><circle cx="1456" cy="178" r="0.6"/><circle cx="89" cy="356" r="0.7"/><circle cx="178" cy="423" r="0.5"/><circle cx="267" cy="389" r="0.8"/><circle cx="356" cy="467" r="0.6"/><circle cx="445" cy="401" r="0.9"/><circle cx="534" cy="378" r="0.7"/><circle cx="623" cy="456" r="0.5"/><circle cx="712" cy="423" r="0.8"/><circle cx="801" cy="389" r="0.6"/><circle cx="890" cy="467" r="0.9"/><circle cx="979" cy="434" r="0.7"/><circle cx="1068" cy="401" r="0.5"/><circle cx="1157" cy="478" r="0.8"/><circle cx="1246" cy="445" r="0.6"/><circle cx="1335" cy="412" r="0.9"/><circle cx="1424" cy="489" r="0.7"/><circle cx="145" cy="567" r="0.5"/><circle cx="234" cy="634" r="0.8"/><circle cx="323" cy="601" r="0.6"/><circle cx="412" cy="678" r="0.9"/><circle cx="501" cy="645" r="0.7"/><circle cx="590" cy="612" r="0.5"/><circle cx="679" cy="689" r="0.8"/><circle cx="768" cy="656" r="0.6"/><circle cx="857" cy="623" r="0.9"/><circle cx="946" cy="700" r="0.7"/><circle cx="1035" cy="667" r="0.5"/><circle cx="1124" cy="634" r="0.8"/><circle cx="1213" cy="711" r="0.6"/><circle cx="1302" cy="678" r="0.9"/><circle cx="1391" cy="645" r="0.7"/><circle cx="1480" cy="712" r="0.5"/><circle cx="67" cy="789" r="0.8"/><circle cx="156" cy="823" r="0.6"/><circle cx="245" cy="856" r="0.9"/><circle cx="334" cy="790" r="0.7"/><circle cx="423" cy="834" r="0.5"/><circle cx="512" cy="867" r="0.8"/><circle cx="601" cy="801" r="0.6"/><circle cx="690" cy="845" r="0.9"/><circle cx="779" cy="812" r="0.7"/><circle cx="868" cy="856" r="0.5"/><circle cx="957" cy="823" r="0.8"/><circle cx="1046" cy="867" r="0.6"/><circle cx="1135" cy="834" r="0.9"/><circle cx="1224" cy="801" r="0.7"/><circle cx="1313" cy="845" r="0.5"/><circle cx="1402" cy="812" r="0.8"/></g></svg>');
+  background-size: cover;
+  background-repeat: repeat;
+  filter: blur(0.5px);
+  opacity: 0.4;
+  animation: twinkle-1 9s ease-in-out infinite;
+}
+
+.stars::after {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900"><g fill="white" opacity="0.4"><circle cx="89" cy="123" r="0.5"/><circle cx="201" cy="234" r="0.7"/><circle cx="345" cy="156" r="0.4"/><circle cx="467" cy="278" r="0.8"/><circle cx="589" cy="201" r="0.6"/><circle cx="712" cy="89" r="0.5"/><circle cx="834" cy="267" r="0.7"/><circle cx="956" cy="145" r="0.4"/><circle cx="1078" cy="178" r="0.8"/><circle cx="1201" cy="234" r="0.6"/><circle cx="1323" cy="123" r="0.5"/><circle cx="1445" cy="189" r="0.7"/><circle cx="112" cy="389" r="0.4"/><circle cx="234" cy="456" r="0.8"/><circle cx="356" cy="423" r="0.6"/><circle cx="478" cy="467" r="0.5"/><circle cx="601" cy="401" r="0.7"/><circle cx="723" cy="378" r="0.4"/><circle cx="845" cy="456" r="0.8"/><circle cx="967" cy="423" r="0.6"/><circle cx="1089" cy="389" r="0.5"/><circle cx="1212" cy="467" r="0.7"/><circle cx="1334" cy="434" r="0.4"/><circle cx="1456" cy="401" r="0.8"/><circle cx="178" cy="612" r="0.6"/><circle cx="301" cy="678" r="0.5"/><circle cx="423" cy="645" r="0.7"/><circle cx="545" cy="689" r="0.4"/><circle cx="667" cy="656" r="0.8"/><circle cx="789" cy="623" r="0.6"/><circle cx="912" cy="700" r="0.5"/><circle cx="1034" cy="667" r="0.7"/><circle cx="1156" cy="634" r="0.4"/><circle cx="1278" cy="711" r="0.8"/><circle cx="1401" cy="678" r="0.6"/><circle cx="1523" cy="645" r="0.5"/><circle cx="123" cy="801" r="0.7"/><circle cx="245" cy="834" r="0.4"/><circle cx="367" cy="867" r="0.8"/><circle cx="489" cy="812" r="0.6"/><circle cx="612" cy="845" r="0.5"/><circle cx="734" cy="823" r="0.7"/><circle cx="856" cy="856" r="0.4"/><circle cx="978" cy="834" r="0.8"/><circle cx="1101" cy="867" r="0.6"/><circle cx="1223" cy="801" r="0.5"/><circle cx="1345" cy="834" r="0.7"/><circle cx="1467" cy="823" r="0.4"/></g></svg>');
+  opacity: 0.25;
+  animation: twinkle-2 13s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+/* Twinkle animations */
+@keyframes twinkle-1 {
+  0%, 100% { 
+    opacity: 0.25;
+    transform: scale(1);
+  }
+  25% { 
+    opacity: 0.45;
+    transform: scale(1.02);
+  }
+  50% { 
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  75% { 
+    opacity: 0.55;
+    transform: scale(0.98);
+  }
+}
+
+@keyframes twinkle-2 {
+  0%, 100% { 
+    opacity: 0.15;
+    transform: scale(1);
+  }
+  30% { 
+    opacity: 0.35;
+    transform: scale(1.03);
+  }
+  60% { 
+    opacity: 0.25;
+    transform: scale(0.97);
+  }
+  90% { 
+    opacity: 0.4;
+    transform: scale(1.01);
+  }
+}
+
+/* Constellation overlay (optional) */
+.constellation-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900"><g stroke="rgba(212,175,55,0.08)" stroke-width="0.5" fill="none"><path d="M123 145L234 67L456 189"/><path d="M567 234L678 123L789 278"/><path d="M890 156L1012 201L1123 89"/><path d="M234 423L356 467L445 401"/><path d="M623 456L712 423L801 389"/><path d="M1157 478L1246 445L1335 412"/></g></svg>');
+  background-size: cover;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Reduced motion overrides */
+@media (prefers-reduced-motion: reduce) {
+  .stars::before,
+  .stars::after {
+    animation: none;
+    opacity: 0.3;
+  }
+  
+  .constellation-overlay {
+    opacity: 0.4;
+  }
+}
+
+[data-reduced-motion="true"] .stars::before,
+[data-reduced-motion="true"] .stars::after {
+  animation: none;
+  opacity: 0.3;
+}
+
+[data-reduced-motion="true"] .constellation-overlay {
+  opacity: 0.4;
+}
+
+/* Effects intensity variants */
+[data-effects="off"] .stars::before,
+[data-effects="off"] .stars::after {
+  display: none;
+}
+
+[data-effects="subtle"] .stars::before,
+[data-effects="subtle"] .stars::after {
+  opacity: 0.2;
+}
+
+[data-effects="full"] .stars::before {
+  opacity: 0.5;
+}
+
+[data-effects="full"] .stars::after {
+  opacity: 0.35;
+}
