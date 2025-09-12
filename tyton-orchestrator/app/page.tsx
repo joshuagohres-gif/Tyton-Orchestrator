@@ -195,7 +195,7 @@ export default function Home() {
             ))}
           </div>
         )}
-      </div>
+      </main>
 
       {/* Create Project Modal */}
       {showCreateModal && (
