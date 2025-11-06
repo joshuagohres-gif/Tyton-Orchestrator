@@ -24,5 +24,8 @@
   "devDependencies": {
     "marked": "^16.2.0",
     "puppeteer": "^24.16.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   }
 }
